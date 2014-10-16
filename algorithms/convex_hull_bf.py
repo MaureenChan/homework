@@ -1,9 +1,9 @@
 #brute force convex_hull
 import random
-import time
 from graphics import *
 
 win = GraphWin('Convex_hull', 800, 800)
+
 def getline(p1, p2):
 	a = p2['y'] - p1['y']	#a = y2 - y1
 	b = p1['x'] - p2['x']	#b = x1 - x2
@@ -49,18 +49,23 @@ def convex_hull(points):
 			if (judge(points,line) == 1):
 				ln = Line(Point(points[i]['x'],points[i]['y']), Point(points[j]['x'], points[j]['y']))
 				ln.draw(win)
+	raw_input();	
 
 
 def main():
+	#draw Entry
 	instructions = Text(Point(win.getWidth()/2,40),"Please input point number:\nThen click the mouse")
 	instructions.draw(win)
 	entry1 = Entry(Point(win.getWidth()/2, 70), 10)
 	entry1.draw(win)
+
+	#get point number
 	win.getMouse()
 	entry = entry1.getText()
 	n = int(entry)
-	points = []
+
 	#create points kept in points[] 
+	points = []
 	for i in range(n):
 		a = random.randint(100,700)
 		b = random.randint(100,700)
@@ -71,8 +76,6 @@ def main():
 	
 	#call convex_hull
 	convex_hull(points)
-	
-	time.sleep(10)
 	
 
 	

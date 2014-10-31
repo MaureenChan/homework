@@ -11,21 +11,6 @@ void print(ptrqnode s)
 	printf("\n");
 }
 
-void Output(ptrqnode s)
-{
-	//Output present linklist
-	int tag;
-	tag = s->tag;
-	printf("%d %d\n", tag, s->tag);
-	return;
-	s = s->next;
-	printf("%d %d\n", tag, s->tag);
-	while(tag != s->tag){
-		print(s);
-		s = s->next;
-	}
-	print(s);
-}
 void InitLink(ptrqnode s, int monkey_number){
 	int i;
 	for(i = 2; i <= monkey_number; i++){
@@ -38,17 +23,19 @@ void InitLink(ptrqnode s, int monkey_number){
 	}
 	s = s->next;
 }
-void select(ptrqnode *s, int period){
+
+void select(ptrqnode s, int period){
 	int i;
 	ptrqnode t;
 	while(1){
 		if(s->next == s)
 			break;
-		else
+		else{
 			for(i = 2; i < period; i++){
 				s = s->next;
 			}
-		t = s->next;
+			t = s->next;
+		}
 		s->next = t->next;
 		s = s->next;
 		free(t);
@@ -61,13 +48,11 @@ int main(){
 	int monkey_number, period;
 	ptrqnode s;
 	printf("monkey_number and period(monkey_number period)");
-	// scanf("%d %d", &monkey_number, &period);
-	monkey_number = 10; period = 1;
+	scanf("%d %d", &monkey_number, &period);
 	s = (ptrqnode)malloc(sizeof(qnode));
 	s->tag = 1;
 	s->next = s;
 	InitLink(s, monkey_number);
 	select(s, period);
-	printf("%d\n", s->tag);
 	return 0;
 }

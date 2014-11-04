@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h>
 void swap(int *a, int low, int high){
 	int t;
 	t = a[low];
@@ -34,6 +35,16 @@ void QSort(int *a, int low, int high){
 	}
 }
 
+int middle(int *a, int low, int high, int well){
+	int ret;
+
+	QSort(a, 0, well - 1);
+
+	ret = well / 2;
+
+	return ret;
+}
+
 int main(){
 	int i = 0, sum = 0;
 	int ret, length, well;
@@ -50,9 +61,7 @@ int main(){
 		scanf("%d %d", &x[i], &y[i]);
 	}
 
-	QSort(y, 0, well - 1);
-
-	ret = well / 2;
+	ret = middle(y, 0, well - 1, well);
 
 	//距离
 	i = 0;
@@ -70,12 +79,10 @@ int main(){
 	}
 
 	//输出
-	for(i = 0; i < well; i++){
-		printf("%d\t", y[i]);
-	}
 	printf("sum:%d\n", sum);
 	free(x);
 	free(y);
+	system("pause");
 	return 0;
 }
 

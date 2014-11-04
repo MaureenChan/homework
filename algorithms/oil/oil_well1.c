@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h>
 
 void swap(int *a, int low, int high){
 	int t;
@@ -28,6 +29,8 @@ int partition(int *y, int low, int high){
 int middle(int *a, int low, int high, int well){
 	int pivot;
 	int i;
+	if(low == high)
+		return low;
 	pivot = partition(a, low, high);
 	if(pivot == well / 2)
 		return pivot;
@@ -73,13 +76,11 @@ int main(){
 	}
 
 	//输出
-	for(i = 0; i < well; i++){
-		printf("%d\t", y[i]);
-	}
 	printf("sum:%d\n", sum);
 
 	free(x);
 	free(y);
+	system("pause");
 	return 0;
 }
 

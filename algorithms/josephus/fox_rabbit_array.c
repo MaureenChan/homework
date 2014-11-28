@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <windows.h>
 #define N 1000
+
 
 int main()
 {
@@ -18,5 +20,7 @@ int main()
 		if(holes[i] == 0)
 			printf("%d\t", i);
 	printf("\n");
+	getchar();
+	system("pause");
 	return 0;
 }

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h>
 
 typedef struct QNode
 {
@@ -82,5 +83,6 @@ int main()
 	InitLink(s, holenumber);
 	catch(s, catch_number);
 	find(s);
+	system("pause");
 	return 0;
 }

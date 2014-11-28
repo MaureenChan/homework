@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h>
+
 typedef struct QNode
 {
 	int tag;
@@ -7,7 +9,7 @@ typedef struct QNode
 }qnode, *ptrqnode;
 void print(ptrqnode s)
 {
-	printf("tag:%d", s->tag);
+	printf("%d", s->tag);
 	printf("\n");
 }
 
@@ -27,21 +29,30 @@ void InitLink(ptrqnode s, int monkey_number){
 void select(ptrqnode s, int period){
 	int i;
 	ptrqnode t;
+	if(period == 0){
+		print(s);
+		return ;
+	}
+	if(period != 1)
+		s = s->next;
 	while(1){
 		if(s->next == s)
 			break;
-		else{
-			for(i = 2; i < period; i++){
-				s = s->next;
-			}
-			t = s->next;
+		for(i = 2; i<= period; i++){
+			s = s->next;
 		}
+		//删除结点
+		t = s->next;
 		s->next = t->next;
 		s = s->next;
 		free(t);
 	}
-	if(s->next == s)
+
+	if(s->next == s){
+		printf("The King is ");
 		print(s);
+		printf("\n");
+	}
 }
 
 int main(){
@@ -54,5 +65,6 @@ int main(){
 	s->next = s;
 	InitLink(s, monkey_number);
 	select(s, period);
+	system("pause");
 	return 0;
 }

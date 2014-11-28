@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h>
 typedef struct QNode
 {
 	int tag;
@@ -85,10 +86,9 @@ int main(){
 	select = Out_of_circle(circle, s, m);
 	q = select->next;
 	while(q->next){
-		print(q);
 		q = q->next;
 	}
 	print(q);
-
+	system("pause");
 	return 0;
 }

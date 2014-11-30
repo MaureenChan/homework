@@ -9,7 +9,7 @@
 TForm1 *Form1;
 //---------------------------------------------------------------------------
 const  AL    =  10;  /* LENGTH OF IDENTIFIERS */
-const  NORW  =  14;  /* # OF RESERVED WORDS */
+const  NORW  =  19;  /* # OF RESERVED WORDS */
 const  TXMAX = 100;  /* LENGTH OF IDENTIFIER TABLE */
 const  NMAX  =  14;  /* MAX NUMBER OF DEGITS IN NUMBERS */
 const  AMAX  =2047;  /* MAXIMUM ADDRESS */
@@ -21,14 +21,19 @@ typedef enum  { NUL, IDENT, NUMBER, PLUS, MINUS, TIMES,
 	            LPAREN, RPAREN, COMMA, SEMICOLON, PERIOD,
 	            BECOMES, BEGINSYM, ENDSYM, IFSYM, THENSYM,
 	            WHILESYM, WRITESYM, READSYM, DOSYM, CALLSYM,
-	            CONSTSYM, VARSYM, PROCSYM, PROGSYM
-        } SYMBOL;
+	            CONSTSYM, VARSYM, PROCSYM, PROGSYM,
+				ELSESYM, FORSYM, STEPSYM, UNTILSYM, RETURNSYM,
+				TIMESBECOMES, SLASHBECOMES, ANDSYM, ORSYM, NOTSYM
+} SYMBOL;
 char *SYMOUT[] = {"NUL", "IDENT", "NUMBER", "PLUS", "MINUS", "TIMES",
 	    "SLASH", "ODDSYM", "EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ",
 	    "LPAREN", "RPAREN", "COMMA", "SEMICOLON", "PERIOD",
 	    "BECOMES", "BEGINSYM", "ENDSYM", "IFSYM", "THENSYM",
 	    "WHILESYM", "WRITESYM", "READSYM", "DOSYM", "CALLSYM",
-	    "CONSTSYM", "VARSYM", "PROCSYM", "PROGSYM" };
+	    "CONSTSYM", "VARSYM", "PROCSYM", "PROGSYM" , 
+		"ELSESYM", "FORSYM", "STEPSYM", "UNTILSYM", "RETURNSYM",
+		"TIMESBECOMES", "SLASHBECOMES", "ANDSYM", "ORSYM", "NOTSYM"
+};
 typedef  int *SYMSET; // SET OF SYMBOL;
 typedef  char ALFA[11];
 typedef  enum { CONSTANT, VARIABLE, PROCEDUR } OBJECTS ;
@@ -218,7 +223,8 @@ void GetSym() {
 	    if (CH=='<') {
 		  GetCh();
 		  if (CH=='=') { SYM=LEQ; GetCh(); }
-		  else SYM=LSS;
+			if (CH=='>') {SYM=NEQ; GetCh();}
+			  else SYM=LSS;
 		}
 		else
 		  if (CH=='>') {
@@ -226,6 +232,37 @@ void GetSym() {
 			if (CH=='=') { SYM=GEQ; GetCh(); }
 			else SYM=GTR;
           }
+		  else
+			if (CH=='*') {
+				GetCh();
+				if(CH=='='){SYM=TIMESBECOMES; GetCh();}
+				else SYM=TIMES;
+			}
+			else
+				if(CH=='/') {
+					GetCh();
+					if(CH=='='){SYM=SLASHBECOMES; GetCh();}
+					else SYM=SLASH;
+				}
+				else 
+					if(CH=='&'){
+						SYM=ANDSYM;
+						GetCh();
+					}
+					else
+						if(CH=='|'){
+							GetCh();
+							if(CH=='|'){
+								SYM=ORSYM;
+								GetCh();
+							}
+							else Error(19);
+						}
+						else
+							if(CH=='!'){
+								SYM=NOTSYM;
+								GetCh();
+							}
 		  else { SYM=SSYM[CH]; GetCh(); }
 } /*GetSym()*/
 //---------------------------------------------------------------------------
@@ -447,7 +484,19 @@ void STATEMENT(SYMSET FSYS,int LEV,int &TX) {   /*STATEMENT*/
 		if (SYM==THENSYM) GetSym();
 		else Error(16);
 		CX1=CX;  GEN(JPC,0,0);
-		STATEMENT(FSYS,LEV,TX);  CODE[CX1].A=CX;
+		STATEMENT(FSYS,LEV,TX);  
+
+		if(SYM==SEMICOLON){
+			GetSym();
+		}
+		CX2=CX;
+		GEN(JMP,0,0);
+		CODE[CX1].A=CX;
+		if (SYM==ELSESYM) {
+			GetSym();
+			STATEMENT(FSYS,LEV,TX);  
+		}
+		CODE[CX2].A=CX;
 		break;
 	case BEGINSYM:
 		GetSym();
@@ -469,6 +518,49 @@ void STATEMENT(SYMSET FSYS,int LEV,int &TX) {   /*STATEMENT*/
 		GEN(JMP,0,CX1);
 		CODE[CX2].A=CX;
 		break;
+	case ELSESYM:
+		GetSym();
+		Form1->printfs("keyword ELSE found!");
+		break;
+	case FORSYM:
+		GetSym();
+		Form1->printfs("keyword FOR found!");
+		break;
+	case STEPSYM:
+		GetSym();
+		Form1->printfs("keyword STEP found!");
+		break;
+	case UNTILSYM:
+		GetSym();
+		Form1->printfs("keyword UNTIL found!");
+		break;
+	case DOSYM:
+		GetSym();
+		Form1->printfs("keyword DO found!");
+		break;
+	case RETURNSYM:
+		GetSym();
+		Form1->printfs("keyword RETURN found!");
+		break;
+	case TIMESBECOMES:
+		GetSym();
+		Form1->printfs("operator *= found!");
+		break;
+	case SLASHBECOMES:
+		GetSym();
+		Form1->printfs("operator /= found!");
+		break;
+	case ANDSYM:
+		GetSym();
+		Form1->printfs("operator & found!");
+		break;
+	case ORSYM:
+		GetSym();
+		Form1->printfs("operator || found!");
+		break;
+	case NOTSYM:
+		GetSym();
+		Form1->printfs("operator ! found!");
   }
   TEST(FSYS,SymSetNULL(),19);
 } /*STATEMENT*/
@@ -585,24 +677,30 @@ void __fastcall TForm1::ButtonRunClick(TObject *Sender) {
   for (CH=' '; CH<='^'; CH++) SSYM[CH]=NUL;
   strcpy(KWORD[ 1],"BEGIN");    strcpy(KWORD[ 2],"CALL");
   strcpy(KWORD[ 3],"CONST");    strcpy(KWORD[ 4],"DO");
-  strcpy(KWORD[ 5],"END");      strcpy(KWORD[ 6],"IF");
-  strcpy(KWORD[ 7],"ODD");      strcpy(KWORD[ 8],"PROCEDURE");
-  strcpy(KWORD[ 9],"PROGRAM");  strcpy(KWORD[10],"READ");
-  strcpy(KWORD[11],"THEN");     strcpy(KWORD[12],"VAR");
-  strcpy(KWORD[13],"WHILE");    strcpy(KWORD[14],"WRITE");
+  strcpy(KWORD[ 5],"ELSE");		strcpy(KWORD[ 6],"END");      
+  strcpy(KWORD[ 7],"FOR");		strcpy(KWORD[ 8],"IF");
+  strcpy(KWORD[ 9],"ODD");      strcpy(KWORD[10],"PROCEDURE");
+  strcpy(KWORD[11],"PROGRAM");  strcpy(KWORD[12],"READ");
+  strcpy(KWORD[13],"RETURN");	strcpy(KWORD[14],"STEP");
+  strcpy(KWORD[15],"THEN");     strcpy(KWORD[16],"UNTIL");
+  strcpy(KWORD[17],"VAR");		strcpy(KWORD[18],"WHILE");    
+  strcpy(KWORD[19],"WRITE");
   WSYM[ 1]=BEGINSYM;   WSYM[ 2]=CALLSYM;
   WSYM[ 3]=CONSTSYM;   WSYM[ 4]=DOSYM;
-  WSYM[ 5]=ENDSYM;     WSYM[ 6]=IFSYM;
-  WSYM[ 7]=ODDSYM;     WSYM[ 8]=PROCSYM;
-  WSYM[ 9]=PROGSYM;    WSYM[10]=READSYM;
-  WSYM[11]=THENSYM;    WSYM[12]=VARSYM;
-  WSYM[13]=WHILESYM;   WSYM[14]=WRITESYM;
+  WSYM[ 5]=ELSESYM;    WSYM[ 6]=ENDSYM;			
+  WSYM[ 7]=FORSYM;	   WSYM[ 8]=IFSYM;
+  WSYM[ 9]=ODDSYM;     WSYM[10]=PROCSYM;
+  WSYM[11]=PROGSYM;    WSYM[12]=READSYM;
+  WSYM[13]=RETURNSYM;  WSYM[14]=STEPSYM;
+  WSYM[15]=THENSYM;    WSYM[16]=UNTILSYM;
+  WSYM[17]=VARSYM;	   WSYM[18]=WHILESYM;   
+  WSYM[19]=WRITESYM;
   SSYM['+']=PLUS;      SSYM['-']=MINUS;
   SSYM['*']=TIMES;     SSYM['/']=SLASH;
   SSYM['(']=LPAREN;    SSYM[')']=RPAREN;
   SSYM['=']=EQL;       SSYM[',']=COMMA;
-  SSYM['.']=PERIOD;    SSYM['#']=NEQ;
-  SSYM[';']=SEMICOLON;
+  SSYM['.']=PERIOD;    SSYM['&']=ANDSYM;
+  SSYM[';']=SEMICOLON; SSYM['!']=NOTSYM;
   strcpy(MNEMONIC[LIT],"LIT");   strcpy(MNEMONIC[OPR],"OPR");
   strcpy(MNEMONIC[LOD],"LOD");   strcpy(MNEMONIC[STO],"STO");
   strcpy(MNEMONIC[CAL],"CAL");   strcpy(MNEMONIC[INI],"INI");

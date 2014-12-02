@@ -3,6 +3,20 @@ VAR A,B,C;
 BEGIN
   A:=88;
   READ(B);
-  C=A+B*(3+B);
+  IF A <> B THEN
+  C:=A+B*(3+B);
+  ELSE C:=A;
+  WRITE(B);
+  *=;
+  /=;
+  &;
+  ||;
+  !;
+  ELSE;
+  FOR;
+  RETURN;
+  STEP;
+  UNTIL;
+  DO;
   WRITE(C)
 END.

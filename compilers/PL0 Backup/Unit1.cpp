@@ -426,10 +426,37 @@ void STATEMENT(SYMSET FSYS,int LEV,int &TX) {   /*STATEMENT*/
 			Error(12); i=0;
 		  }
         GetSym();
-		if (SYM==BECOMES) GetSym();
+		if (SYM==BECOMES) {
+			GetSym();
+			EXPRESSION(FSYS,LEV,TX);
+		}
+		else if(SYM==TIMESBECOMES){
+			GetSym();
+			EXPRESSION(FSYS,LEV,TX);
+			if(i!=0){
+				switch (TABLE[i].KIND) {
+				  case CONSTANT: GEN(LIT,0,TABLE[i].VAL); break;
+				  case VARIABLE: GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR); break;
+				  case PROCEDUR: Error(21); break;
+				}
+				GEN(OPR,0, 4);
+			}
+		}
+		else if(SYM==SLASHBECOMES){
+			GetSym();
+			if(i!=0){
+				switch (TABLE[i].KIND) {
+				  case CONSTANT: GEN(LIT,0,TABLE[i].VAL); break;
+				  case VARIABLE: GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR); break;
+				  case PROCEDUR: Error(21); break;
+				}
+				EXPRESSION(FSYS,LEV,TX);
+				GEN(OPR, 0, 5);
+			}
+		}
 		else Error(13);
-		EXPRESSION(FSYS,LEV,TX);
-		if (i!=0) GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+		if (i!=0) 
+			GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
 		break;
 	case READSYM:
 		GetSym();
@@ -643,7 +670,7 @@ void Interpret() {
 	      case 2: T--; S[T]=S[T]+S[T+1];   break;
 	      case 3: T--; S[T]=S[T]-S[T+1];   break;
 	      case 4: T--; S[T]=S[T]*S[T+1];   break;
-	      case 5: T--; S[T]=S[T] % S[T+1]; break;
+	      case 5: T--; S[T]=S[T]/S[T+1]; break;
 	      case 6: S[T]=(S[T]%2!=0);        break;
 	      case 8: T--; S[T]=S[T]==S[T+1];  break;
 	      case 9: T--; S[T]=S[T]!=S[T+1];  break;

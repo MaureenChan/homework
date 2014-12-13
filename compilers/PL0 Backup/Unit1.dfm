@@ -42,6 +42,45 @@ object Form1: TForm1
     TabOrder = 0
     OnClick = ButtonRunClick
   end
+  object Label2: TLabel
+    Left = 832
+    Top = 500
+    Width = 200
+    Height = 63
+    Caption = '3212005897'
+    Font.Charset = GB2312_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -40
+    Font.Name = '黑体'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label3: TLabel
+    Left = 832
+    Top = 550
+    Width = 200
+    Height = 63
+    Caption = '陈绮苗'
+    Font.Charset = GB2312_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -40
+    Font.Name = '黑体'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label4: TLabel
+    Left = 832
+    Top = 600
+    Width = 200
+    Height = 63
+    Caption = '计科3班'
+    Font.Charset = GB2312_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -40
+    Font.Name = '黑体'
+    Font.Style = []
+    ParentFont = False
+  end
   object Memo1: TMemo
     Left = 8
     Top = 8

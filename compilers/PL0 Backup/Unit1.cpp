@@ -242,6 +242,18 @@ void GetSym() {
 				if(CH=='/') {
 					GetCh();
 					if(CH=='='){SYM=SLASHBECOMES; GetCh();}
+					else if(CH=='*'){
+						while(1){
+							GetCh();
+							if(CH=='*'){
+								GetCh();
+								if(CH=='/')
+									break;
+							}
+						}
+						GetCh();
+						GetSym();
+					}
 					else SYM=SLASH;
 				}
 				else 
@@ -426,6 +438,7 @@ void STATEMENT(SYMSET FSYS,int LEV,int &TX) {   /*STATEMENT*/
 			Error(12); i=0;
 		  }
         GetSym();
+
 		if (SYM==BECOMES) {
 			GetSym();
 			EXPRESSION(FSYS,LEV,TX);
@@ -433,30 +446,18 @@ void STATEMENT(SYMSET FSYS,int LEV,int &TX) {   /*STATEMENT*/
 		else if(SYM==TIMESBECOMES){
 			GetSym();
 			EXPRESSION(FSYS,LEV,TX);
-			if(i!=0){
-				switch (TABLE[i].KIND) {
-				  case CONSTANT: GEN(LIT,0,TABLE[i].VAL); break;
-				  case VARIABLE: GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR); break;
-				  case PROCEDUR: Error(21); break;
-				}
-				GEN(OPR,0, 4);
-			}
+			GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+			GEN(OPR,0, 4);
 		}
 		else if(SYM==SLASHBECOMES){
 			GetSym();
-			if(i!=0){
-				switch (TABLE[i].KIND) {
-				  case CONSTANT: GEN(LIT,0,TABLE[i].VAL); break;
-				  case VARIABLE: GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR); break;
-				  case PROCEDUR: Error(21); break;
-				}
-				EXPRESSION(FSYS,LEV,TX);
-				GEN(OPR, 0, 5);
-			}
+			GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+			EXPRESSION(FSYS,LEV,TX);
+			GEN(OPR, 0, 5);
 		}
 		else Error(13);
-		if (i!=0) 
-			GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+
+		GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
 		break;
 	case READSYM:
 		GetSym();

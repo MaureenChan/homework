@@ -1,0 +1,14 @@
+PROGRAM ELSETEST;
+CONST A = 1, B = 2;
+VAR T;
+BEGIN 
+	READ(T);
+	IF T<>0 THEN WRITE(A)
+	ELSE WRITE(B)
+	
+END.
+  READ(B);
+  IF A <> B THEN
+  B:=A+B*(3+B);
+  ELSE B*=A;
+

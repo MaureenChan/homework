@@ -3,5 +3,11 @@
 
 *.swp
 *.o
+*.cod
+*.bpr
+*.exe
+*.tds
+*.obj
+
 graphics.pyc
 graphics.py

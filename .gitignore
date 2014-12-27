@@ -9,5 +9,8 @@
 *.tds
 *.obj
 
+*.exe
+*.tds
+*.obj
 graphics.pyc
 graphics.py

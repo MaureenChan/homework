@@ -38,6 +38,13 @@ function create_PCB(){
 	create.push(process1);
 	var process2 = new PCB();
 	create.push(process2);
+	var process3 = new PCB();
+	create.push(process3);
+	var process4 = new PCB();
+	create.push(process4);
+	var process5 = new PCB();
+	create.push(process5);
+
 	create.sort(com_atime);
 	console.log("Initial list:")
 	console.log(create);
@@ -63,7 +70,7 @@ var j = 0;
 var stamp;
 
 create_PCB();
-while(finish.length != 3){	//判断是否全部进程都完成了
+while(finish.length != 6){	//判断是否全部进程都完成了
 	if(finish.length == 0)	//完成队列为空，先来的马上运行
 		ready.push(create.shift());
 	else	//第一个完成之后判断时候有其它进程到达	

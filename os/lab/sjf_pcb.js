@@ -58,13 +58,14 @@ var finish = new Array();	//finish queue
 var r_pcb;	//running pcb
 var i = 0;
 var j = 0;
+var stamp;
 
 create_PCB();
 while(finish.length != 3){	//判断是否全部进程都完成了
 	if(finish.length == 0)	//完成队列为空，先来的马上运行
 		ready.push(create.shift());
 	else	//第一个完成之后判断时候有其它进程到达	
-		while(create.length != 0 && r_pcb.ftime >= create[0].atime){	
+		while(create.length != 0 && stamp>= create[0].atime){	
 			ready.push(create.shift());	//到达了就调入到就绪队列
 			if(create.length == 0)
 				break;
@@ -86,7 +87,11 @@ while(finish.length != 3){	//判断是否全部进程都完成了
 		r_pcb.rtime = r_pcb.ntime;
 		r_pcb.ftime = r_pcb.stime + r_pcb.rtime;
 		finish.push(r_pcb);
+		stamp = r_pcb.ftime;
+	}else{
+		stamp = create[0].atime;
 	}
+	
 	disp();
 }
 

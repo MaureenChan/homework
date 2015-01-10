@@ -1,0 +1,11 @@
+.special{
+  font-style:italic;
+}
+h2.special{
+  text-transform:uppercase;
+}
+p{
+  color:yellow;
+  font-family:"arial", sans-serif;
+  font-size:1.2em;
+}

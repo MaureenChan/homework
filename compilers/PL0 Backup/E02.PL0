@@ -1,0 +1,8 @@
+PROGRAM EX02;
+VAR A,B,C;
+BEGIN
+  A:=3;
+  C:=18;
+  FOR B:=6 STEP 2 UNTIL C DO
+  WRITE(B)
+END.

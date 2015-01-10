@@ -1,0 +1,7 @@
+PROGRAM EX03;
+VAR A;
+BEGIN
+  A:=3;
+  /*COMMENT*/
+  WRITE(A);
+END.

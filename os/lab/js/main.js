@@ -162,7 +162,7 @@ function spf(cbs, fre) {
   var step = 0;
   cbs.sort(com_atime);
   var interval = setInterval(function () {
-    console.log('an interval');
+    //如果到达开始时间就进入就绪队列
     if(cbs.length != 0) {
       while (step == cbs[0].atime) {
         ready.push(cbs.shift());
@@ -175,13 +175,10 @@ function spf(cbs, fre) {
       ready.sort(com_ntime);
       if (ready.length == 0){
         step++;
-      } else if (step < ready[0].atime){
-        step++;
       } else if (step >= ready[0].atime) {
         running = ready.shift();
         running.stime = step;
         running.rtime++;
-        console.log('rtime++');
         running.update();
         step++;
       }
@@ -201,7 +198,6 @@ function spf(cbs, fre) {
     }
   }, fre);
 }
-
 function hrrn(cbs, fre) {
   var running = null;
   var ready = [];
@@ -294,7 +290,6 @@ function rr(cbs, fre) {
 
   }, fre);
 }
-
 function fcfs(cbs, fre) {
   var running = null;
   var memory = 100;

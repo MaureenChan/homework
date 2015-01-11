@@ -1,11 +1,6 @@
 $(document).ready(function () {
-  var before = new Memory(5),
-      bf = $.extend(true, {}, before),
-      wf = $.extend(true, {}, before),
-      ff = $.extend(true, {}, before),
-      nf = $.extend(true, {}, before);
+  before.finish = $.extend(true, [], before.ready);
 
-  
   var html = '';
   before.title1 = 'initial jobs';
   before.title2 = 'initial free';
@@ -35,4 +30,6 @@ $(document).ready(function () {
   html += template('row', nf);
 
   $('#data').html(html);
+
+
 });

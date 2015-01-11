@@ -4,6 +4,7 @@ function memory(count) {
   this.finish = [];
   this.SIZE = 10;
 
+  //随机生成作业链和空闲区链
   for (var i = 0; i < count; i++) {
     this.ready.push(new JOB(i));
     this.free.push(new release());
@@ -12,6 +13,7 @@ function memory(count) {
   this.free.sort(this.com_add);
 
   console.log('before union', this.free);
+  //生成无重叠的空闲区链
   (function (free) {
     var temp = free.shift();
     while (temp.address <= free[0].address) {
@@ -31,20 +33,25 @@ function memory(count) {
   })(this.free);
   console.log('after union', this.free);
 
+  //作业的结构
   function JOB(num) {
     this.num = num;
     this.need = parseInt(rand(0, 100) + num);
     this.address = 0;
     this.state = 'apply memory';
   }
+  //空闲区的结构
   function release() {
     this.address = parseInt(rand(0, 1000));
     this.size = parseInt(rand(0, 100));
   }
+  //随机函数
   function rand(min, max) {
     return Math.floor(min + Math.random() * (max - min));
   }
 }
+
+//按地址升序排序
 memory.prototype.com_add = function (value1, value2) {
   a = value1.address;
   b = value2.address;
@@ -56,7 +63,8 @@ memory.prototype.com_add = function (value1, value2) {
     return 0;
   }
 }
-memory.prototype.a_com_size = function (value, value2) {
+//按大小升序排序
+memory.prototype.a_com_size = function (value1, value2) {
     a = value1.size;
     b = value2.size;
     if (a > b) {
@@ -71,6 +79,41 @@ memory.prototype.a_com_size = function (value, value2) {
 // 以下为具体算法实现
 var bf = new memory(5);
 bf.run = function (job) {
+  var r_free;
+  var len = this.free.length;
   this.free.sort(this.a_com_size);
+  while (len--) {
+    r_free = this.free.shift();
+    if (r_free.size < job.need) {
+      this.free.push(r_free);
+      continue;
+    } else if (r_free.size == job.need) {
+      job.state = "Done";
+      job.address = r_free.address;
+      this.finish.push(job);
+      break;
+    } else {
+      if (r_free.size - this.SIZE < job.need) {
+        this.free.push(r_free);
+        continue;
+      } else {
+        job.state = "Done";
+        job.address = r_free.address;
+        r_free.address = r_free.address + job.need + 1;
+        r_free.size = r_free.size - job.need;
+        this.finish.push(job);
+        this.free.push(r_free);
+        break;
+      }
+    }
+  }
+  if (job.address == 0) {
+    job.state = 'False! Too Big!';
+    this.finish.push(job);
+  }
 };
-console.log(bf);
+
+for (var i = 0; i < bf.ready.length; i++) {
+  bf.run(bf.ready[i]);
+  console.log(bf);
+}

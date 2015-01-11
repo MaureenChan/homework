@@ -1,4 +1,4 @@
-function memory(count) {
+function Memory(count) {
   this.ready = [];
   this.free = [];
   this.finish = [];
@@ -52,7 +52,7 @@ function memory(count) {
 }
 
 //按地址升序排序
-memory.prototype.com_add = function (value1, value2) {
+Memory.prototype.com_add = function (value1, value2) {
   a = value1.address;
   b = value2.address;
   if (a > b) {
@@ -64,7 +64,7 @@ memory.prototype.com_add = function (value1, value2) {
   }
 }
 //按大小升序排序
-memory.prototype.a_com_size = function (value1, value2) {
+Memory.prototype.a_com_size = function (value1, value2) {
     a = value1.size;
     b = value2.size;
     if (a > b) {
@@ -77,8 +77,8 @@ memory.prototype.a_com_size = function (value1, value2) {
 }
 
 // 以下为具体算法实现
-var bf = new memory(5);
-bf.run = function (job) {
+// 最佳适应算法
+Memory.prototype.bf = function (job) {
   var r_free;
   var len = this.free.length;
   this.free.sort(this.a_com_size);
@@ -113,7 +113,14 @@ bf.run = function (job) {
   }
 };
 
-for (var i = 0; i < bf.ready.length; i++) {
-  bf.run(bf.ready[i]);
-  console.log(bf);
+Memory.prototype.wf = function (job) {
 }
+
+
+var bf = new Memory(5);
+//for (var i = 0; i < memory.ready.length; i++) {
+  //memory.bf(memory.ready[i]);
+  //console.log(memory);
+//}
+
+// 最坏适应算法

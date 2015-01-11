@@ -16,12 +16,13 @@
     {{each algos}}
     <div id="div-{{$value}}">
       <h2>{{$value}}</h2>
+      &nbsp;
       <button class="btn btn-success action" id="btn-{{$value}}">Action</button>
 
-      <div id="progress-{{$value}}">
+      <div id="progress-{{$value}}" class="progressbars">
       </div>
 
-      <table class="table table-bordered" id="table-cbs-{{$value}}">
+      <table class="table table-bordered" id="table-cbs-{{$value}}" style="display:none">
         <thead>
           <tr>
             <td>id</td>
@@ -30,6 +31,8 @@
             <td>开始时间</td>
             <td>结束时间</td>
             <td>优先级</td>
+            <td>周转时间</td>
+            <td>带权周转时间</td>
           </tr>
         </thead>
         <tbody>

@@ -1,3 +1,6 @@
-#progress {
+h2 {
+  display: inline-block;
+}
+.progressbars {
   margin-top: 20px;
 }

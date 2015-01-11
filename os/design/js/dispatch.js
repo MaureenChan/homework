@@ -7,7 +7,7 @@ $(document).ready(function () {
   })();
   // 获取表单中的参数
   //var count = $('#count').val();
-  var count = 5;
+  var count = 8;
 
   // 创建一个进度条
   var createProgressBar = function (id, max) {
@@ -48,6 +48,10 @@ $(document).ready(function () {
                  $('<td></td>').html(cb.ftime)
                ).append(
                  $('<td></td>').html(cb.super)
+               ).append(
+                 $('<td></td>').html(cb.ttime).addClass('ttime')
+               ).append(
+                 $('<td></td>').html(cb.wtime).addClass('wtime')
                );
     return tr;
   }
@@ -60,24 +64,41 @@ $(document).ready(function () {
     // 绘制初始化进度条
     var $progress = $('#progress-' + algo);
     var $tbody = $('#table-cbs-' + algo + ' tbody');
+    $('#table-cbs-' + algo).show();
     $progress.empty();
     $tbody.empty();
-    cbs.forEach(function (cb) {
+    var ownCbs = $.extend(true, [], cbs);
+    ownCbs.forEach(function (cb) {
       $progress.append(createProgressBar(algo + cb.name, cb.ntime));
       $tbody.append(createTr(cb, algo));
     });
+    $tbody.append(
+      $('<tr></tr>')
+        .attr({
+          'id': algo + '-last-tr'
+        })
+        .append(
+          $('<td colspan="2">平均周转时间</td>')
+        ).append(
+          $('<td colspan="2"></td>')
+        ).append(
+          $('<td colspan="2">平均带权周转时间</td>')
+        ).append(
+          $('<td colspan="2"></td>')
+        )
+    );
 
-    console.log(cbs);
+    console.log(ownCbs);
 
-    var freq = 10;
+    var freq = 50;
     if (algo === 'fcfs') {
-      fcfs(cbs, freq);
+      fcfs(ownCbs, freq);
     } else if (algo === 'rr') {
-      rr(cbs, freq);
+      rr(ownCbs, freq);
     } else if (algo === 'hrrn') {
-      hrrn(cbs, freq);
+      hrrn(ownCbs, freq);
     } else if (algo === 'spf') {
-      spf(cbs, freq);
+      spf(ownCbs, freq);
     }
   });
 
@@ -97,6 +118,26 @@ $(document).ready(function () {
       $('#' + algo + this.name).css('width', this.rtime / this.ntime * 100 + '%');
       $('#' + algo + 'tr-' + this.name + ' td')[3].innerHTML = this.stime;
       $('#' + algo + 'tr-' + this.name + ' td')[4].innerHTML = this.ftime;
+      $('#' + algo + 'tr-' + this.name + ' td')[6].innerHTML = this.ttime;
+      $('#' + algo + 'tr-' + this.name + ' td')[7].innerHTML = this.wtime.toFixed(2);
+
+      var avg_ttime = 0;
+      var avg_wtime = 0;
+
+      var ttimes = $('#table-cbs-' + algo + ' .ttime');
+      var wtimes = $('#table-cbs-' + algo + ' .wtime');
+
+      for (var i = 0; i < ttimes.length; i++) {
+        avg_ttime += Number(ttimes[i].innerHTML);
+        avg_wtime += Number(wtimes[i].innerHTML);
+      }
+
+      avg_ttime /= ttimes.length;
+      avg_wtime /= wtimes.length;
+
+
+      $('#' + algo + '-last-tr' + ' td')[1].innerHTML = avg_ttime.toFixed(2);
+      $('#' + algo + '-last-tr' + ' td')[3].innerHTML = avg_wtime.toFixed(2);
     };
     return ret;
   }
@@ -152,6 +193,7 @@ function fcfs(cbs, fre) {
         running.ttime = running.ftime - running.atime;
         running.wtime = running.ttime / running.ntime;
         running.update('fcfs');
+        console.log(running);
         finish.push(running);
         running = null;
       }

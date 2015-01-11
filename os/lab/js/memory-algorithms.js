@@ -63,7 +63,7 @@ Memory.prototype.com_add = function (value1, value2) {
     return 0;
   }
 }
-//按大小升序排序
+//按空闲区大小降序排序
 Memory.prototype.a_com_size = function (value1, value2) {
     a = value1.size;
     b = value2.size;
@@ -76,6 +76,18 @@ Memory.prototype.a_com_size = function (value1, value2) {
     }
 }
 
+//按空闲区大小降序排序
+Memory.prototype.d_com_size = function (value1, value2) {
+    a = value1.size;
+    b = value2.size;
+    if (a < b) {
+      return 1;
+    } else if (a > b) {
+      return -1;
+    } else {
+      return 0;
+    }
+}
 // 以下为具体算法实现
 // 最佳适应算法
 Memory.prototype.bf = function (job) {
@@ -113,14 +125,109 @@ Memory.prototype.bf = function (job) {
   }
 };
 
-Memory.prototype.wf = function (job) {
-}
-
-
-var bf = new Memory(5);
-//for (var i = 0; i < memory.ready.length; i++) {
-  //memory.bf(memory.ready[i]);
-  //console.log(memory);
-//}
-
 // 最坏适应算法
+Memory.prototype.wf = function (job) {
+  var r_free;
+  var len = this.free.length;
+  this.free.sort(this.d_com_size);
+  while (len--) {
+    r_free = this.free.shift();
+    if (r_free.size < job.need) {
+      this.free.push(r_free);
+      continue;
+    } else if (r_free.size == job.need) {
+      job.state = "Done";
+      job.address = r_free.address;
+      this.finish.push(job);
+      break;
+    } else {
+      if (r_free.size - this.SIZE < job.need) {
+        this.free.push(r_free);
+        continue;
+      } else {
+        job.state = "Done";
+        job.address = r_free.address;
+        r_free.address = r_free.address + job.need + 1;
+        r_free.size = r_free.size - job.need;
+        this.finish.push(job);
+        this.free.push(r_free);
+        break;
+      }
+    }
+  }
+  if (job.address == 0) {
+    job.state = 'False! Too Big!';
+    this.finish.push(job);
+  }
+};
+
+// 首次适应算法
+Memory.prototype.ff = function (job) {
+  var r_free;
+  var len = this.free.length;
+  this.free.sort(this.com_add);
+  while (len--) {
+    r_free = this.free.shift();
+    if (r_free.size < job.need) {
+      this.free.push(r_free);
+      continue;
+    } else if (r_free.size == job.need) {
+      job.state = "Done";
+      job.address = r_free.address;
+      this.finish.push(job);
+      break;
+    } else {
+      if (r_free.size - this.SIZE < job.need) {
+        this.free.push(r_free);
+        continue;
+      } else {
+        job.state = "Done";
+        job.address = r_free.address;
+        r_free.address = r_free.address + job.need + 1;
+        r_free.size = r_free.size - job.need;
+        this.finish.push(job);
+        this.free.push(r_free);
+        break;
+      }
+    }
+  }
+  if (job.address == 0) {
+    job.state = 'False! Too Big!';
+    this.finish.push(job);
+  }
+};
+
+// 循环适应算法
+Memory.prototype.nf = function (job) {
+  var r_free;
+  var len = this.free.length;
+  while (len--) {
+    r_free = this.free.shift();
+    if (r_free.size < job.need) {
+      this.free.push(r_free);
+      continue;
+    } else if (r_free.size == job.need) {
+      job.state = "Done";
+      job.address = r_free.address;
+      this.finish.push(job);
+      break;
+    } else {
+      if (r_free.size - this.SIZE < job.need) {
+        this.free.push(r_free);
+        continue;
+      } else {
+        job.state = "Done";
+        job.address = r_free.address;
+        r_free.address = r_free.address + job.need + 1;
+        r_free.size = r_free.size - job.need;
+        this.finish.push(job);
+        this.free.push(r_free);
+        break;
+      }
+    }
+  }
+  if (job.address == 0) {
+    job.state = 'False! Too Big!';
+    this.finish.push(job);
+  }
+};

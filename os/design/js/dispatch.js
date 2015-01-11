@@ -1,147 +1,110 @@
 $(document).ready(function () {
-  $('input[name="type"]').change(function() {
-    var type = $('input[name="type"]:checked').val();
-    console.log(type);
-    var algorithms = $('#algorithm option');
-    if (type === 'process') {
-      $(algorithms[0]).val('HRRN');
-      $(algorithms[1]).val('SPF');
-      $(algorithms[2]).val('RR');
+  (function () {
+    var html = '';
+    var algos = ['fcfs', 'hrrn', 'spf', 'rr'];
+    html = template('algos', {algos: algos});
+    $('#content').html(html);
+  })();
+  // 获取表单中的参数
+  //var count = $('#count').val();
+  var count = 5;
 
-      $(algorithms[0]).text('HRRN');
-      $(algorithms[1]).text('SPF');
-      $(algorithms[2]).text('RR');
-    } else if (type === 'job') {
-      $(algorithms[0]).val('SJF');
-      $(algorithms[1]).val('PF');
-      $(algorithms[2]).val('FCFS');
+  // 创建一个进度条
+  var createProgressBar = function (id, max) {
+    var progressBar = $('<div></div>')
+                         .addClass('progress')
+                         .attr({
+                           'style': 'width: ' + max * 10 + 'px'
+                         })
+                         .append(
+                           $('<div></div>')
+                             .addClass('progress-bar progress-bar-striped')
+                             .attr({ 
+                               'role': 'progressbar',
+                               'aria-valuemin': 0, 
+                               'aria-valuemax': 100,
+                               'style': 'width: 0%',
+                               'id': id
+                             })
+                             .html(id)
+                         );
+    return progressBar;
+  };
+  // 创建一行数据
+  var createTr = function (cb, algo) {
+    var tr = $('<tr></tr>')
+               .attr({
+                 'id': algo + 'tr-' + cb.name
+               })
+               .append(
+                 $('<td></td>').html(cb.name)
+               ).append(
+                 $('<td></td>').html(cb.atime)
+               ).append(
+                 $('<td></td>').html(cb.ntime)
+               ).append(
+                 $('<td></td>').html(cb.stime)
+               ).append(
+                 $('<td></td>').html(cb.ftime)
+               ).append(
+                 $('<td></td>').html(cb.super)
+               );
+    return tr;
+  }
 
-      $(algorithms[0]).text('SJF');
-      $(algorithms[1]).text('PF');
-      $(algorithms[2]).text('FCFS');
-    }
-  });
-  $('#form-args').submit(function() {
-    // 获取表单中的参数
-    var type = $('input[name="type"]:checked').val();
-    var algorithm = $('#algorithm').val();
-    var count = $('#count').val();
-    console.log(type, algorithm, count);
+  var cbs = createCB('process', count);
+  console.log('new cbs', cbs);
 
-    // 创建一个进度条
-    var createProgressBar = function (id, max) {
-      var progressBar = $('<div></div>')
-                           .addClass('progress')
-                           .attr({
-                             'style': 'width: ' + max * 10 + 'px'
-                           })
-                           .append(
-                             $('<div></div>')
-                               .addClass('progress-bar progress-bar-striped')
-                               .attr({ 
-                                 'role': 'progressbar',
-                                 'aria-valuemin': 0, 
-                                 'aria-valuemax': 100,
-                                 'style': 'width: 0%',
-                                 'id': id
-                               })
-                               .html(id)
-                           );
-      return progressBar;
-    };
-    // 创建一行数据
-    var createTr = function (cb) {
-      var tr = $('<tr></tr>')
-                 .attr({
-                   'id': 'tr-' + cb.name
-                 })
-                 .append(
-                   $('<td></td>').html(cb.name)
-                 ).append(
-                   $('<td></td>').html(cb.atime)
-                 ).append(
-                   $('<td></td>').html(cb.ntime)
-                 ).append(
-                   $('<td></td>').html(cb.stime)
-                 ).append(
-                   $('<td></td>').html(cb.ftime)
-                 ).append(
-                   $('<td></td>').html(cb.super)
-                 );
-      return tr;
-    }
-
-
-    // 创建进程/作业数组
-    if (type === 'process') {
-      var cbs = createCB('process', count);
-    } else if (type === 'job') {
-      var cbs = createCB('job', count);
-    }
-    console.log('new cbs', cbs);
-
+  $('.action').click(function (e) {
+    var algo = this.id.substr(4);
     // 绘制初始化进度条
-    var $progress = $('#progress');
-    var $tbody = $('#table-cbs tbody');
+    var $progress = $('#progress-' + algo);
+    var $tbody = $('#table-cbs-' + algo + ' tbody');
     $progress.empty();
     $tbody.empty();
     cbs.forEach(function (cb) {
-      $progress.append(createProgressBar(cb.name, cb.ntime));
-      $tbody.append(createTr(cb));
+      $progress.append(createProgressBar(algo + cb.name, cb.ntime));
+      $tbody.append(createTr(cb, algo));
     });
 
-    var freq = 100;
-    if (algorithm === 'HRRN') {
-      hrrn(cbs, freq);
-    } else if (algorithm === 'SPF') {
-      spf(cbs, freq);
-    } else if (algorithm === 'RR') {
-      rr(cbs, freq);
-    } else if (algorithm === 'SJF') {
-      sjf(cbs, freq);
-    } else if (algorithm === 'FCFS') {
-      fcfs(cbs, freq);
-    } else if (algorithm === 'PF') {
-      pf(cbs, freq);
-    }
+    console.log(cbs);
 
-    return false;
-  })
+    var freq = 10;
+    if (algo === 'fcfs') {
+      fcfs(cbs, freq);
+    } else if (algo === 'rr') {
+      rr(cbs, freq);
+    } else if (algo === 'hrrn') {
+      hrrn(cbs, freq);
+    } else if (algo === 'spf') {
+      spf(cbs, freq);
+    }
+  });
+
 
   function PCB(i) {
-    this.name = 'process' + i;
-    this.super = i;
-    this.ntime = parseInt(Math.random() * 90 + 10);
-    this.atime = parseInt(Math.random() * 100);
-    this.stime = 0;
-    this.rtime = 0;
-    this.ftime = 0;
-    this.ttime = 0;
-    this.wtime = 0;
+    var ret = {};
+    ret.name = 'process' + i;
+    ret.super = i;
+    ret.ntime = parseInt(Math.random() * 90 + 10);
+    ret.atime = parseInt(Math.random() * 100);
+    ret.stime = 0;
+    ret.rtime = 0;
+    ret.ftime = 0;
+    ret.ttime = 0;
+    ret.wtime = 0;
+    ret.update = function (algo) {
+      $('#' + algo + this.name).css('width', this.rtime / this.ntime * 100 + '%');
+      $('#' + algo + 'tr-' + this.name + ' td')[3].innerHTML = this.stime;
+      $('#' + algo + 'tr-' + this.name + ' td')[4].innerHTML = this.ftime;
+    };
+    return ret;
   }
-  function JCB(i) {
-    this.name = 'job' + i;
-    this.super = i;
-    this.ntime = parseInt(Math.random() * 100);
-    this.atime = parseInt(Math.random() * 100);
-    this.stime = 0;
-    this.rtime = 0;
-    this.ftime = 0;
-    this.mcount = parseInt(Math.random() * 100);
-    this.tcount = parseInt(Math.random() * 4 + 1);
-  }
-  PCB.prototype.update = JCB.prototype.update = function () {
-    $('#' + this.name).css('width', this.rtime / this.ntime * 100 + '%');
-    $('#tr-' + this.name + ' td')[3].innerHTML = this.stime;
-    $('#tr-' + this.name + ' td')[4].innerHTML = this.ftime;
-  };
   function createCB(type, count) {
     var ret = [];
     var CB;
     if (type === 'process') {
       CB = PCB;
-    } else if (type === 'job') {
-      CB = JCB;
     }
     for (var i = 0; i < count; i++) {
       ret.push(new CB(i));
@@ -177,18 +140,18 @@ function fcfs(cbs, fre) {
       } else if (step >= ready[0].atime) {
         running = ready.shift();
         running.stime = step;
-        running.update();
+        running.update('fcfs');
       }
     } else {
       if (running.rtime != running.ntime) {
         running.rtime++;
-        running.update();
+        running.update('fcfs');
         step++;
       } else {
         running.ftime = step;
         running.ttime = running.ftime - running.atime;
         running.wtime = running.ttime / running.ntime;
-        running.update();
+        running.update('fcfs');
         finish.push(running);
         running = null;
       }
@@ -218,18 +181,18 @@ function spf(cbs, fre) {
       } else if (step >= ready[0].atime) {
         running = ready.shift();
         running.stime = step;
-        running.update();
+        running.update('spf');
       }
     } else {
       if (running.rtime != running.ntime) {
         running.rtime++;
-        running.update();
+        running.update('spf');
         step++;
       } else {
         running.ftime = step;
         running.ttime = running.ftime - running.atime;
         running.wtime = running.ttime / running.ntime;
-        running.update();
+        running.update('spf');
         finish.push(running);
         running = null;
       }
@@ -269,18 +232,18 @@ function hrrn(cbs, fre) {
       } else if (step >= ready[0].atime) {
         running = ready.shift();
         running.stime = step;
-        running.update();
+        running.update('hrrn');
       }
     } else {
       if (running.rtime != running.ntime) {
         running.rtime++;
-        running.update();
+        running.update('hrrn');
         step++;
       } else {
         running.ftime = step;
         running.ttime = running.ftime - running.atime;
         running.wtime = running.ttime / running.ntime;
-        running.update();
+        running.update('hrrn');
         finish.push(running);
         running = null;
       }
@@ -303,7 +266,7 @@ function rr(cbs, fre) {
         } else {
           running.stime = step;
         }
-        running.update();
+        running.update('rr');
         ready.push(running);
         if(cbs.length == 0)
           break;
@@ -313,12 +276,12 @@ function rr(cbs, fre) {
 
     if(len){
       running = ready.shift();
-      running.update();
+      running.update('rr');
       if(running.rtime == running.ntime) {
         running.ftime = step;
         running.ttime = running.ftime - running.atime;
         running.wtime = running.ttime / running.ntime;
-        running.update();
+        running.update('rr');
         finish.push(running);
       } else {
         running.rtime++;

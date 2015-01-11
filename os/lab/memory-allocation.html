@@ -4,79 +4,69 @@
   <link rel="stylesheet" href="css/bootstrap.css">
   <meta charset="UTF-8">
   <title>内存分配</title>
-  <link rel="stylesheet" href="css/memory-allocation.css">
 </head>
 <body>
   <div class="container">
     <div class="page-header">
-      <form id="form-args" class="form-inline" role="form">
-
-        <!--<div class="radio">-->
-          <!--<label>-->
-            <!--<input type="radio" name="type" id="process" value="process" checked>-->
-            <!--进程调度-->
-          <!--</label>-->
-        <!--</div>-->
-
-        <!--&nbsp;-->
-
-        <!--<div class="radio">-->
-          <!--<label>-->
-            <!--<input type="radio" name="type" id="job" value="job">-->
-            <!--作业调度-->
-          <!--</label>-->
-        <!--</div>-->
-        <!--&nbsp;-->
-
-        <!--<div class="form-group">-->
-          <!--<div class="input-group">-->
-            <!--<select id="algorithm" name="" class="form-control">-->
-              <!--<option value="HRRN">HRRN</option>-->
-              <!--<option value="SPF">SPF</option>-->
-              <!--<option value="RR">RR</option>-->
-            <!--</select>-->
-          <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="form-group">-->
-          <!--<div class="input-group">-->
-            <!--<input type="number" id="count" class="form-control" placeholder="process/job count">-->
-          <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="form-group">-->
-          <!--<div class="input-group">-->
-            <!--<input type="submit" class="btn btn-success" value="Action">-->
-          <!--</div>-->
-        <!--</div>-->
-      </form>
-
+      <h1>内存分配</h1>
     </div>
 
-    <table class="table table-bordered" id="table-cbs">
-      <thead>
-        <tr>
-          <td>id</td>
-          <td>到达时间</td>
-          <td>需要时间</td>
-          <td>开始时间</td>
-          <td>结束时间</td>
-          <td>优先级</td>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
-
-    <div id="memory">
-      <canvas width="1000" height="200">
-      </canvas>
+    <div id="data">
     </div>
+
 
   </div>
 
+  <script type="text/html" id="row">
+    <div class="row">
+      <div class="col-lg-6">
+        <h2>{{title1}}</h2>
+        <table class="table table-bordered" id="table-cbs">
+          <thead>
+            <tr>
+              <td>num</td>
+              <td>address</td>
+              <td>need</td>
+              <td>state</td>
+            </tr>
+          </thead>
+          <tbody>
+            {{each ready}}
+              <tr>
+                <td>{{$value.num}}</td>
+                <td>{{$value.address}}</td>
+                <td>{{$value.need}}</td>
+                <td>{{$value.state}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-lg-6">
+        <h2>{{title2}}</h2>
+        <table class="table table-bordered" id="table-cbs">
+          <thead>
+            <tr>
+              <td>address</td>
+              <td>size</td>
+            </tr>
+          </thead>
+          <tbody>
+            {{each free}}
+              <tr>
+                <td>{{$value.address}}</td>
+                <td>{{$value.size}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </script>
   <script src="js/jquery.js"></script>
   <script src="js/bootstrap.js"></script>
+  <script src="js/memory-algorithms.js"></script>
+  <script src="js/template.js"></script>
   <script src="js/memory-allocation.js"></script>
 </body>
 </html>

@@ -116,6 +116,8 @@ $(document).ready(function () {
     this.stime = 0;
     this.rtime = 0;
     this.ftime = 0;
+    this.ttime = 0;
+    this.wtime = 0;
   }
   function JCB(i) {
     this.name = 'job' + i;
@@ -147,14 +149,52 @@ $(document).ready(function () {
     return ret;
   }
 });
-
 function com_atime(value1, value2) {
   return value1.atime - value2.atime;
 }
 function com_ntime(value1, value2) {
   return value1.ntime - value2.ntime;
 }
+function fcfs(cbs, fre) {
+  var running = null;
+  var ready = [];
+  var finish = [];
+  var step = 0;
+  cbs.sort(com_atime);
+  var interval = setInterval(function () {
+    if(cbs.length != 0) {
+      while (step == cbs[0].atime) {
+        ready.push(cbs.shift());
+        if(cbs.length == 0)
+          break;
+      }
+    }
 
+    if(running == null) {
+      ready.sort(com_atime);
+      if (ready.length == 0){
+        step++;
+      } else if (step >= ready[0].atime) {
+        running = ready.shift();
+        running.stime = step;
+        running.update();
+      }
+    } else {
+      if (running.rtime != running.ntime) {
+        running.rtime++;
+        running.update();
+        step++;
+      } else {
+        running.ftime = step;
+        running.ttime = running.ftime - running.atime;
+        running.wtime = running.ttime / running.ntime;
+        running.update();
+        finish.push(running);
+        running = null;
+      }
+    }
+  }, fre);
+}
 function spf(cbs, fre) {
   var running = null;
   var ready = [];
@@ -178,9 +218,7 @@ function spf(cbs, fre) {
       } else if (step >= ready[0].atime) {
         running = ready.shift();
         running.stime = step;
-        running.rtime++;
         running.update();
-        step++;
       }
     } else {
       if (running.rtime != running.ntime) {
@@ -189,11 +227,11 @@ function spf(cbs, fre) {
         step++;
       } else {
         running.ftime = step;
+        running.ttime = running.ftime - running.atime;
+        running.wtime = running.ttime / running.ntime;
         running.update();
         finish.push(running);
-        
         running = null;
-        step++;
       }
     }
   }, fre);
@@ -228,14 +266,10 @@ function hrrn(cbs, fre) {
       ready.sort(com_rp);
       if (ready.length == 0){
         step++;
-      } else if (step < ready[0].atime){
-        step++;
       } else if (step >= ready[0].atime) {
         running = ready.shift();
         running.stime = step;
-        running.rtime++;
         running.update();
-        step++;
       }
     } else {
       if (running.rtime != running.ntime) {
@@ -244,11 +278,11 @@ function hrrn(cbs, fre) {
         step++;
       } else {
         running.ftime = step;
+        running.ttime = running.ftime - running.atime;
+        running.wtime = running.ttime / running.ntime;
         running.update();
         finish.push(running);
-        
         running = null;
-        step++;
       }
     }
   }, fre);
@@ -264,7 +298,11 @@ function rr(cbs, fre) {
     if(cbs.length != 0) {
       while (step == cbs[0].atime) {
         running = cbs.shift();
-        running.stime = step;
+        if(ready.length) {
+          running.stime = step + ready.length;
+        } else {
+          running.stime = step;
+        }
         running.update();
         ready.push(running);
         if(cbs.length == 0)
@@ -275,208 +313,21 @@ function rr(cbs, fre) {
 
     if(len){
       running = ready.shift();
-      console.log(running);
-      running.rtime++;
       running.update();
       if(running.rtime == running.ntime) {
         running.ftime = step;
+        running.ttime = running.ftime - running.atime;
+        running.wtime = running.ttime / running.ntime;
         running.update();
         finish.push(running);
       } else {
+        running.rtime++;
+        step++;
         ready.push(running);
       }
-    }
-    step++;
-
-  }, fre);
-}
-function fcfs(cbs, fre) {
-  var running = null;
-  var memory = 100;
-  var tape = 5;
-  var ready = [];
-  var finish = [];
-  var step = 0;
-  cbs.sort(com_atime);
-  var interval = setInterval(function () {
-    if(cbs.length != 0) {
-      while (step == cbs[0].atime) {
-        ready.push(cbs.shift());
-        if(cbs.length == 0)
-          break;
-      }
-    }
-
-    if(running == null) {
-      ready.sort(com_atime);
-      if (ready.length == 0){
-        step++;
-      } else if (step < ready[0].atime){
-        step++;
-      } else if (step >= ready[0].atime) {
-        for(var i = 0; i < ready.length; i++){
-          running = ready.shift();
-          if(memory >= running.mcount && tape >= running.tcount) {
-            running.stime = step;
-            running.rtime++;
-            memory -= running.mcount;
-            tape -= running.tcount;
-            running.update();
-            break;
-          } else {
-            ready.push(running);
-          }
-        }
-        step++;
-      }
     } else {
-      if (running.rtime != running.ntime) {
-        running.rtime++;
-        running.update();
-        step++;
-      } else {
-        running.ftime = step;
-        memory += running.mcount;
-        tape += running.tcount;
-        running.update();
-        finish.push(running);
-        
-        running = null;
-        step++;
-      }
-    }
-  }, fre);
-}
-function sjf(cbs, fre) {
-  var running = null;
-  var ready = [];
-  var finish = [];
-  var memory = 100;
-  var tape = 5;
-  var step = 0;
-  cbs.sort(com_atime);
-  var interval = setInterval(function () {
-    console.log('an interval');
-    if(cbs.length != 0) {
-      while (step == cbs[0].atime) {
-        ready.push(cbs.shift());
-        if(cbs.length == 0)
-          break;
-      }
+      step++;
     }
 
-    if(running == null) {
-      ready.sort(com_ntime);
-      if (ready.length == 0){
-        step++;
-      } else if (step >= ready[0].atime) {
-        for(var i = 0; i < ready.length; i++){
-          running = ready.shift();
-          if(memory >= running.mcount && tape >= running.tcount) {
-            running.stime = step;
-            running.rtime++;
-            console.log('rtime++');
-            memory -= running.mcount;
-            tape -= running.tcount;
-            running.update();
-            break;
-          } else {
-            ready.push(running);
-          }
-        }
-        step++;
-      }
-    } else {
-      if (running.rtime != running.ntime) {
-        running.rtime++;
-            console.log('rtime++');
-        running.update();
-        step++;
-      } else {
-        running.ftime = step;
-        memory += running.mcount;
-        tape += running.tcount;
-        running.update();
-        finish.push(running);
-        
-        running = null;
-        step++;
-      }
-    }
-  }, fre);
-}
-function pf(cbs, fre) {
-  var running = null;
-  var memory = 100;
-  var tape = 5;
-  var ready = [];
-  var finish = [];
-  var step = 0;
-  cbs.sort(com_atime);
-  var interval = setInterval(function () {
-    if(cbs.length != 0) {
-      while (step == cbs[0].atime) {
-        ready.push(cbs.shift());
-        if(cbs.length == 0)
-          break;
-      }
-    }
-    function com_super(value1, value2) {
-      var a = value1.super;
-      var b = value2.super;
-      if (a < b)
-        return -1;
-      else if (a > b)
-        return 1;
-      else
-        return 0;
-    }
-
-    if(running == null) {
-      //console.log('running is null');
-      ready.sort(com_super);
-      if (ready.length == 0){
-        //console.log('no ready');
-        step++;
-      } else if (step >= ready[0].atime) {
-        //console.log('has ready');
-        for(var i = 0; i < ready.length; i++){
-          running = ready.shift();
-          console.log(ready);
-          if(memory >= running.mcount && tape >= running.tcount) {
-            running.stime = step;
-            console.log(running, 'start');
-            running.rtime++;
-            memory -= running.mcount;
-            tape -= running.tcount;
-            //console.log(running);
-            running.update();
-            break;
-          } else {
-            ready.push(running);
-            running = null;
-          }
-        }
-        step++;
-      }
-    } else {
-      //console.log('continue running');
-      if (running.rtime < running.ntime) {
-        //console.log('not finish');
-        running.rtime++;
-        running.update();
-        step++;
-      } else {
-        //console.log('finished');
-        running.rtime++;
-        running.ftime = step;
-        memory += running.mcount;
-        tape += running.tcount;
-        running.update();
-        finish.push(running);
-        running = null;
-        step++;
-      }
-    }
   }, fre);
 }

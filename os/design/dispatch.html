@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <meta charset="UTF-8">
+  <title>进程调度</title>
+  <link rel="stylesheet" href="css/dispatch.css">
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <form id="form-args" class="form-inline" role="form">
+
+        <div class="radio">
+          <label>
+            <input type="radio" name="type" id="process" value="process" checked>
+            进程调度
+          </label>
+        </div>
+
+        &nbsp;
+
+        <div class="radio">
+          <label>
+            <input type="radio" name="type" id="job" value="job">
+            作业调度
+          </label>
+        </div>
+        &nbsp;
+
+        <div class="form-group">
+          <div class="input-group">
+            <select id="algorithm" name="" class="form-control">
+              <option value="HRRN">HRRN</option>
+              <option value="SPF">SPF</option>
+              <option value="RR">RR</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-group">
+            <input type="number" id="count" class="form-control" placeholder="process/job count">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-group">
+            <input type="submit" class="btn btn-success" value="Action">
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+    <div id="progress">
+    </div>
+
+    <table class="table table-bordered" id="table-cbs">
+      <thead>
+        <tr>
+          <td>id</td>
+          <td>到达时间</td>
+          <td>需要时间</td>
+          <td>开始时间</td>
+          <td>结束时间</td>
+          <td>优先级</td>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+
+  </div>
+
+  <script src="js/jquery.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/dispatch.js"></script>
+</body>
+</html>

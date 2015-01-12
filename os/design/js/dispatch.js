@@ -1,13 +1,13 @@
 $(document).ready(function () {
   (function () {
     var html = '';
-    var algos = ['fcfs', 'hrrn', 'spf', 'rr'];
+    var algos = ['fcfs', 'hrrn', 'spf', 'rr', 'preemptive_spf'];
     html = template('algos', {algos: algos});
     $('#content').html(html);
   })();
   // 获取表单中的参数
   //var count = $('#count').val();
-  var count = 8;
+  var count = 6;
 
   // 创建一个进度条
   var createProgressBar = function (id, max) {
@@ -90,7 +90,7 @@ $(document).ready(function () {
 
     console.log(ownCbs);
 
-    var freq = 50;
+    var freq = 300;
     if (algo === 'fcfs') {
       fcfs(ownCbs, freq);
     } else if (algo === 'rr') {
@@ -99,6 +99,8 @@ $(document).ready(function () {
       hrrn(ownCbs, freq);
     } else if (algo === 'spf') {
       spf(ownCbs, freq);
+    } else if (algo === 'preemptive_spf') {
+      preemptive_spf(ownCbs, freq);
     }
   });
 
@@ -106,7 +108,7 @@ $(document).ready(function () {
   function PCB(i) {
     var ret = {};
     ret.name = 'process' + i;
-    ret.super = i;
+    ret.super = 0;
     ret.ntime = parseInt(Math.random() * 90 + 10);
     ret.atime = parseInt(Math.random() * 100);
     ret.stime = 0;
@@ -118,6 +120,7 @@ $(document).ready(function () {
       $('#' + algo + this.name).css('width', this.rtime / this.ntime * 100 + '%');
       $('#' + algo + 'tr-' + this.name + ' td')[3].innerHTML = this.stime;
       $('#' + algo + 'tr-' + this.name + ' td')[4].innerHTML = this.ftime;
+      $('#' + algo + 'tr-' + this.name + ' td')[5].innerHTML = this.super;
       $('#' + algo + 'tr-' + this.name + ' td')[6].innerHTML = this.ttime;
       $('#' + algo + 'tr-' + this.name + ' td')[7].innerHTML = this.wtime.toFixed(2);
 
@@ -159,11 +162,22 @@ function com_atime(value1, value2) {
 function com_ntime(value1, value2) {
   return value1.ntime - value2.ntime;
 }
+function com_rtime(value1, value2) {
+  a = value1.ntime - value1.rtime;
+  b = value2.ntime - value2.rtime;
+  if(a > b)
+    return 1;
+  else if (a < b) 
+    return -1;
+  else 
+    return 0;
+}
 function fcfs(cbs, fre) {
   var running = null;
   var ready = [];
   var finish = [];
   var step = 0;
+  var i = 1;
   cbs.sort(com_atime);
   var interval = setInterval(function () {
     if(cbs.length != 0) {
@@ -192,6 +206,7 @@ function fcfs(cbs, fre) {
         running.ftime = step;
         running.ttime = running.ftime - running.atime;
         running.wtime = running.ttime / running.ntime;
+        running.super = i++;
         running.update('fcfs');
         console.log(running);
         finish.push(running);
@@ -205,6 +220,7 @@ function spf(cbs, fre) {
   var ready = [];
   var finish = [];
   var step = 0;
+  var i = 1;
   cbs.sort(com_atime);
   var interval = setInterval(function () {
     //如果到达开始时间就进入就绪队列
@@ -234,6 +250,7 @@ function spf(cbs, fre) {
         running.ftime = step;
         running.ttime = running.ftime - running.atime;
         running.wtime = running.ttime / running.ntime;
+        running.super = i++;
         running.update('spf');
         finish.push(running);
         running = null;
@@ -241,11 +258,57 @@ function spf(cbs, fre) {
     }
   }, fre);
 }
+function preemptive_spf (cbs, fre) {
+  var running = null;
+  var ready = [];
+  var finish = [];
+  var step = 0;
+  var i = 1;
+  cbs.sort(com_atime);
+  var interval = setInterval(function () {
+    if(cbs.length != 0) {
+      while (step == cbs[0].atime) {
+        ready.push(cbs.shift());
+        if (cbs.length == 0)
+          break;
+      }
+    }
+    console.log(ready);
+    console.log(finish);
+    if (ready.length == 0) {
+      step++;
+    } else {
+      ready.sort(com_rtime);
+      running = ready.shift();
+      if(running.rtime) {
+        running.update('preemptive_spf');
+      } else {
+        running.stime = step;
+        running.update('preemptive_spf');
+      }
+      if (running.rtime != running.ntime) {
+        running.rtime++;
+        running.update('preemptive_spf');
+        ready.push(running);
+        step++;
+      } else {
+        running.ftime = step;
+        running.ttime = running.ftime - running.atime;
+        running.wtime = running.ttime / running.ntime;
+        running.super = i++;
+        running.update('preemptive_spf');
+        finish.push(running);
+      }
+    }
+
+  }, fre);
+}
 function hrrn(cbs, fre) {
   var running = null;
   var ready = [];
   var finish = [];
   var step = 0;
+  var i = 0;
   cbs.sort(com_atime);
 
   function com_rp(value1, value2) {
@@ -285,6 +348,7 @@ function hrrn(cbs, fre) {
         running.ftime = step;
         running.ttime = running.ftime - running.atime;
         running.wtime = running.ttime / running.ntime;
+        running.super = i++;
         running.update('hrrn');
         finish.push(running);
         running = null;
@@ -296,6 +360,7 @@ function rr(cbs, fre) {
   var ready = [];
   var running;
   var finish = [];
+  var i = 1;
   var step = 0;
   var len;
   cbs.sort(com_atime);
@@ -323,6 +388,7 @@ function rr(cbs, fre) {
         running.ftime = step;
         running.ttime = running.ftime - running.atime;
         running.wtime = running.ttime / running.ntime;
+        running.super = i++;
         running.update('rr');
         finish.push(running);
       } else {

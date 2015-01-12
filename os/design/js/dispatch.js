@@ -45,6 +45,8 @@ $(document).ready(function () {
                ).append(
                  $('<td></td>').html(cb.stime)
                ).append(
+                 $('<td></td>').html(cb.rtime)
+               ).append(
                  $('<td></td>').html(cb.ftime)
                ).append(
                  $('<td></td>').html(cb.super)
@@ -84,7 +86,7 @@ $(document).ready(function () {
         ).append(
           $('<td colspan="2">平均带权周转时间</td>')
         ).append(
-          $('<td colspan="2"></td>')
+          $('<td colspan="3"></td>')
         )
     );
 
@@ -120,10 +122,11 @@ $(document).ready(function () {
     ret.update = function (algo) {
       $('#' + algo + this.name).css('width', this.rtime / this.ntime * 100 + '%');
       $('#' + algo + 'tr-' + this.name + ' td')[3].innerHTML = this.stime;
-      $('#' + algo + 'tr-' + this.name + ' td')[4].innerHTML = this.ftime;
-      $('#' + algo + 'tr-' + this.name + ' td')[5].innerHTML = this.super;
-      $('#' + algo + 'tr-' + this.name + ' td')[6].innerHTML = this.ttime;
-      $('#' + algo + 'tr-' + this.name + ' td')[7].innerHTML = this.wtime.toFixed(2);
+      $('#' + algo + 'tr-' + this.name + ' td')[4].innerHTML = this.rtime;
+      $('#' + algo + 'tr-' + this.name + ' td')[5].innerHTML = this.ftime;
+      $('#' + algo + 'tr-' + this.name + ' td')[6].innerHTML = this.super;
+      $('#' + algo + 'tr-' + this.name + ' td')[7].innerHTML = this.ttime;
+      $('#' + algo + 'tr-' + this.name + ' td')[8].innerHTML = this.wtime.toFixed(2);
 
       var avg_ttime = 0;    //平均周转时间
       var avg_wtime = 0;    //平均带权周转时间

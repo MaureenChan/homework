@@ -123,8 +123,18 @@ $(document).ready(function () {
     var ret = {};
     ret.name = 'process' + i;   //进程名
     ret.super = 0;              //完成次序标记
-    ret.ntime = ntime || parseInt(Math.random() * 90 + 10);      //需要运行时间
-    ret.atime = atime || parseInt(Math.random() * 100);      //到达时间
+    //需要运行时间
+    if (ntime !== undefined) {
+      ret.ntime = ntime;
+    } else {
+      ret.ntime = parseInt(Math.random() * 90 + 10); 
+    }
+    // 到达时间
+    if (atime != undefined) {
+      ret.atime = atime;
+    } else {
+      ret.atime = parseInt(Math.random() * 100); 
+    }
     ret.stime = 0;  //开始时间
     ret.rtime = 0;  //执行时间
     ret.ftime = 0;  //完成时间

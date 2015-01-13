@@ -15,3 +15,5 @@
 *.obj
 graphics.pyc
 graphics.py
+
+database.php

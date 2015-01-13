@@ -20,6 +20,18 @@ class Init extends Migration {
             $table->datetime('birthday');
         });
 
+        Schema::create('answer', function($table) {
+            $table->increments('id');
+            $table->string('answer', 1000)->nullable(false);
+            $table->string('status', 20)->nullable(false);
+            $table->integer('user_id')->unsigned();
+            $table->datetime('answer_date');
+
+            $table->foreign('user_id')
+                ->references('id')->on('user')
+                ->onDelete('cascade');
+        });
+
         Schema::create('question', function($table) {
             $table->increments('id');
             $table->string('question',1000)->nullable(false);
@@ -34,18 +46,6 @@ class Init extends Migration {
 
             $table->foreign('answer_id')
                 ->references('id')->on('answer')
-                ->onDelete('cascade');
-        });
-
-        Schema::create('answer', function($table) {
-            $table->increments('id');
-            $table->string('answer', 1000)->nullable(false);
-            $table->string('status', 20)->nullable(false);
-            $table->integer('user_id')->unsigned();
-            $table->datetime('answer_date');
-
-            $table->foreign('user_id')
-                ->references('id')->on('user')
                 ->onDelete('cascade');
         });
 
@@ -74,7 +74,7 @@ class Init extends Migration {
                 ->references('id')->on('user')
                 ->onDelete('cascade');
 
-            $table->foreign('follower_id')
+            $table->foreign('follower')
                 ->references('id')->on('user')
                 ->onDelete('cascade');
         });

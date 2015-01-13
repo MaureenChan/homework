@@ -13,6 +13,25 @@
   </div>
 
   <script type="text/html" id="algos">
+    <form id="form-args" class="form-inline" role="form">
+      <div class="radio">
+        <label>
+          <input type="radio" name="type" id="process" value="sample" checked>
+          样本数据
+        </label>
+      </div>
+
+      &nbsp;
+
+      <div class="radio">
+        <label>
+          <input type="radio" name="type" id="job" value="random">
+          随机数据
+        </label>
+      </div>
+      &nbsp;
+    </form>
+
     {{each algos}}
     <div id="div-{{$value}}">
       <h2>{{$value}}</h2>

@@ -7,7 +7,7 @@ $(document).ready(function () {
   })();
   // 获取表单中的参数
   //var count = $('#count').val();
-  var count = 6;
+  var count = 5;
 
   // 创建一个进度条
   var createProgressBar = function (id, max) {
@@ -58,17 +58,29 @@ $(document).ready(function () {
     return tr;
   }
 
-  var cbs = createCB('process', count);
-  console.log('new cbs', cbs);
 
   $('.action').click(function (e) {
     var algo = this.id.substr(4);
     // 绘制初始化进度条
     var $progress = $('#progress-' + algo);
     var $tbody = $('#table-cbs-' + algo + ' tbody');
+    var ntime = [];
+    var atime = [];
     $('#table-cbs-' + algo).show();
     $progress.empty();
     $tbody.empty();
+    var type = $('input[name="type"]:checked').val();
+    console.log(type);
+    if (type === 'sample') {
+      ntime = [3,6,4,5,2];
+      atime = [0,2,4,6,8];
+    } else if (type === 'random') {
+      for (var i = 0; i < count; i++) {
+        ntime[i] = parseInt(Math.random() * 90 + 10);  
+        atime[i] = parseInt(Math.random() * 100);      
+      }
+    }
+    var cbs = createCB('process', count, ntime, atime);
     var ownCbs = $.extend(true, [], cbs);
     ownCbs.forEach(function (cb) {
       $progress.append(createProgressBar(algo + cb.name, cb.ntime));
@@ -107,12 +119,12 @@ $(document).ready(function () {
   });
 
 
-  function PCB(i) {
+  function PCB(i, ntime, atime) {
     var ret = {};
     ret.name = 'process' + i;   //进程名
     ret.super = 0;              //完成次序标记
-    ret.ntime = parseInt(Math.random() * 90 + 10);  //需要运行时间
-    ret.atime = parseInt(Math.random() * 100);      //到达时间
+    ret.ntime = ntime;      //需要运行时间
+    ret.atime = atime;      //到达时间
     ret.stime = 0;  //开始时间
     ret.rtime = 0;  //执行时间
     ret.ftime = 0;  //完成时间
@@ -149,17 +161,20 @@ $(document).ready(function () {
     return ret;
   }
   //生成一个pcb
-  function createCB(type, count) {
+  function createCB(type, count, ntime, atime) {
     var ret = [];
     var CB;
     if (type === 'process') {
       CB = PCB;
     }
     for (var i = 0; i < count; i++) {
-      ret.push(new CB(i));
+      ret.push(new CB(i, ntime[i], atime[i]));
+      console.log(ntime);
+      console.log(atime);
+      console.log(ret);
     }
     return ret;
-  }
+};
 });
 // 按到达时间升序排序
 function com_atime(value1, value2) {
@@ -300,6 +315,7 @@ function preemptive_spf (cbs, fre) {
           break;
       }
     }
+    ready.sort(com_atime);
     // 判断就绪队列是否有进程
     if (ready.length == 0) {
       //没有进程则时间向前移

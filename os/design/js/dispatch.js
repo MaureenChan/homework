@@ -59,29 +59,29 @@ $(document).ready(function () {
   }
 
 
+  // 生成随机数据
+  var cbs = createCB('process', count);
+  // 生产定制数据
+  var customCbs = createCB('process', 5, [3,6,4,5,2], [0,2,4,6,8]);
+  console.log(customCbs);
+
   $('.action').click(function (e) {
     var algo = this.id.substr(4);
     // 绘制初始化进度条
     var $progress = $('#progress-' + algo);
     var $tbody = $('#table-cbs-' + algo + ' tbody');
-    var ntime = [];
-    var atime = [];
     $('#table-cbs-' + algo).show();
     $progress.empty();
     $tbody.empty();
     var type = $('input[name="type"]:checked').val();
     console.log(type);
     if (type === 'sample') {
-      ntime = [3,6,4,5,2];
-      atime = [0,2,4,6,8];
+      // 复制定制数据
+      var ownCbs = $.extend(true, [], customCbs);
     } else if (type === 'random') {
-      for (var i = 0; i < count; i++) {
-        ntime[i] = parseInt(Math.random() * 90 + 10);  
-        atime[i] = parseInt(Math.random() * 100);      
-      }
+      // 复制随机数据
+      var ownCbs = $.extend(true, [], cbs);
     }
-    var cbs = createCB('process', count, ntime, atime);
-    var ownCbs = $.extend(true, [], cbs);
     ownCbs.forEach(function (cb) {
       $progress.append(createProgressBar(algo + cb.name, cb.ntime));
       $tbody.append(createTr(cb, algo));
@@ -123,8 +123,8 @@ $(document).ready(function () {
     var ret = {};
     ret.name = 'process' + i;   //进程名
     ret.super = 0;              //完成次序标记
-    ret.ntime = ntime;      //需要运行时间
-    ret.atime = atime;      //到达时间
+    ret.ntime = ntime || parseInt(Math.random() * 90 + 10);      //需要运行时间
+    ret.atime = atime || parseInt(Math.random() * 100);      //到达时间
     ret.stime = 0;  //开始时间
     ret.rtime = 0;  //执行时间
     ret.ftime = 0;  //完成时间
@@ -168,10 +168,16 @@ $(document).ready(function () {
       CB = PCB;
     }
     for (var i = 0; i < count; i++) {
-      ret.push(new CB(i, ntime[i], atime[i]));
-      console.log(ntime);
-      console.log(atime);
-      console.log(ret);
+      // 如果 ntime 和 atime 有值则使用它们的值
+      if (ntime && atime) {
+        ret.push(new CB(i, ntime[i], atime[i]));
+        console.log(ntime);
+        console.log(atime);
+        console.log(ret);
+      // 如果没有就使用随机值
+      } else {
+        ret.push(new CB(i));
+      }
     }
     return ret;
 };

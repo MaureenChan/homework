@@ -151,11 +151,11 @@ function com_ntime(value1, value2) {
   return value1.ntime - value2.ntime;
 }
 function spf(cbs, fre) {
-  var running = null;
-  var ready = [];
-  var finish = [];
-  var step = 0;
-  cbs.sort(com_atime);
+  var running = null;       // 存储正在运行的pcb
+  var ready = [];           // 就绪队列
+  var finish = [];          // 完成队列
+  var step = 0;             // 全局时间控制
+  cbs.sort(com_atime);      // 初始进程队列按照到达时间排序
   var interval = setInterval(function () {
     //如果到达开始时间就进入就绪队列
     if(cbs.length != 0) {
@@ -167,20 +167,27 @@ function spf(cbs, fre) {
     }
 
     if(running == null) {
+      // 如果没有程序在运行,则判断就绪队列是否有进程
       if (ready.length == 0){
+        //没有进程则时间向前移
         step++;
       } else if (step >= ready[0].atime) {
+        // 存在进程则把就绪队列按照需要时间排序
+        // 需要时间短的则先执行
         ready.sort(com_ntime);
         running = ready.shift();
         running.stime = step;
         running.update();
       }
     } else {
+      // 如果存在进行的进程的话，则判断是否执行完毕
       if (running.rtime != running.ntime) {
+        // 没有执行完毕则继续执行
         running.rtime++;
         running.update();
         step++;
       } else {
+        // 完成了则计算完成时间，周转时间和带权周转时间
         running.ftime = step;
         running.update();
         finish.push(running);
@@ -190,12 +197,12 @@ function spf(cbs, fre) {
   }, fre);
 }
 function hrrn(cbs, fre) {
-  var running = null;
-  var ready = [];
-  var finish = [];
-  var step = 0;
-  cbs.sort(com_atime);
-
+  var running = null;   // 存储正在运行的pcb
+  var ready = [];       // 就绪队列
+  var finish = [];      // 完成队列
+  var step = 0;         // 全局时间控制
+  cbs.sort(com_atime);  // 初始进程队列按照到达时间排序
+  // 计算并优化响应比优先
   function com_rp(value1, value2) {
     a = (step - value1.atime) / value1.ntime;
     b = (step - value2.atime) / value2.ntime;
@@ -207,6 +214,7 @@ function hrrn(cbs, fre) {
       return 0;
   }
   var interval = setInterval(function () {
+    //如果到达开始时间就进入就绪队列
     if(cbs.length != 0) {
       while (step == cbs[0].atime) {
         ready.push(cbs.shift());
@@ -216,20 +224,27 @@ function hrrn(cbs, fre) {
     }
 
     if(running == null) {
+      // 如果没有程序在运行,则判断就绪队列是否有进程
       if (ready.length == 0){
+        //没有进程则时间向前移
         step++;
       } else if (step >= ready[0].atime) {
+        // 存在进程则把就绪队列按照响应比逆序排序
+        // 响应比高的则先执行
         ready.sort(com_rp);
         running = ready.shift();
         running.stime = step;
         running.update();
       }
     } else {
+      // 如果存在进行的进程的话，则判断是否执行完毕
       if (running.rtime != running.ntime) {
+        // 没有执行完毕则继续执行
         running.rtime++;
         running.update();
         step++;
       } else {
+        // 完成了则计算完成时间，周转时间和带权周转时间
         running.ftime = step;
         running.update();
         finish.push(running);
@@ -239,19 +254,22 @@ function hrrn(cbs, fre) {
   }, fre);
 }
 function rr(cbs, fre) {
-  var ready = [];
-  var running;
-  var finish = [];
-  var step = 0;
-  var len;
-  cbs.sort(com_atime);
+  var running;          // 存储正在运行的pcb
+  var ready = [];       // 就绪队列
+  var finish = [];      // 完成队列
+  var step = 0;         // 全局时间控制
+  var len;              // 存储就绪队列长度
+  cbs.sort(com_atime);  // 初始进程队列按照到达时间排序
   var interval = setInterval(function () {
+    //如果到达开始时间就进入就绪队列
     if(cbs.length != 0) {
       while (step == cbs[0].atime) {
         running = cbs.shift();
         if (ready.length){
+          // 就绪队列不空则等到前面队列执行之后才执行
           running.stime = step + ready.length;
         } else {
+          // 就绪队列为空则马上执行
           running.stime = step;
         }
         running.update();
@@ -265,30 +283,34 @@ function rr(cbs, fre) {
     if(len){
       running = ready.shift();
       running.update();
+      // 运行完成
       if(running.rtime == running.ntime) {
         running.ftime = step;
         running.update();
         finish.push(running);
       } else {
+        // 还没运行完就运行一次后返回就绪队列
         running.rtime++;
         step++;
         ready.push(running);
       }
     } else {
+      // 没有就绪队列就时间向前移
       step++;
     }
 
   }, fre);
 }
 function fcfs(cbs, fre) {
-  var running = null;
-  var memory = 100;
-  var tape = 5;
-  var ready = [];
-  var finish = [];
-  var step = 0;
-  cbs.sort(com_atime);
+  var running = null;   // 存储正在运行的jcb
+  var ready = [];       // 后备队列
+  var finish = [];      // 完成队列
+  var step = 0;         // 全局时间控制
+  var memory = 100;     // 总共内存
+  var tape = 5;         // 总磁带机数
+  cbs.sort(com_atime);  // 初始作业队列按照到达时间排序
   var interval = setInterval(function () {
+    //如果达到到达时间，则插入到后备队列中
     if(cbs.length != 0) {
       while (step == cbs[0].atime) {
         ready.push(cbs.shift());
@@ -298,14 +320,19 @@ function fcfs(cbs, fre) {
     }
 
     if(running == null) {
+      // 如果没有程序在运行,则判断后备队列是否有作业
       if (ready.length == 0){
+        //没有作业则时间向前移
         step++;
       } else if (step >= ready[0].atime) {
+        // 存在则把后备队列按照到达时间排序
+        // 先到达的并且资源需求得到满足则先执行
         ready.sort(com_atime);
         for(var i = 0; i < ready.length; i++){
           running = ready.shift();
           if(memory >= running.mcount && tape >= running.tcount) {
             running.stime = step;
+            // 分配资源
             memory -= running.mcount;
             tape -= running.tcount;
             running.update();
@@ -316,12 +343,16 @@ function fcfs(cbs, fre) {
         }
       }
     } else {
+      // 如果存在进行的作业的话，则判断是否执行完毕
       if (running.rtime != running.ntime) {
+        // 没有执行完毕则继续执行
         running.rtime++;
         running.update();
         step++;
       } else {
+        // 完成了则计算完成时间，周转时间和带权周转时间
         running.ftime = step;
+        // 回收资源
         memory += running.mcount;
         tape += running.tcount;
         running.update();
@@ -332,14 +363,15 @@ function fcfs(cbs, fre) {
   }, fre);
 }
 function sjf(cbs, fre) {
-  var running = null;
-  var ready = [];
-  var finish = [];
-  var memory = 100;
-  var tape = 5;
-  var step = 0;
-  cbs.sort(com_atime);
+  var running = null;   // 存储正在运行的jcb
+  var ready = [];       // 后备队列
+  var finish = [];      // 完成队列
+  var step = 0;         // 全局时间控制
+  var memory = 100;     // 总共内存
+  var tape = 5;         // 总磁带机数
+  cbs.sort(com_atime);  // 初始作业队列按照到达时间排序
   var interval = setInterval(function () {
+    //如果达到到达时间，则插入到后备队列中
     if(cbs.length != 0) {
       while (step == cbs[0].atime) {
         ready.push(cbs.shift());
@@ -349,13 +381,18 @@ function sjf(cbs, fre) {
     }
 
     if(running == null) {
-      ready.sort(com_ntime);
+      // 如果没有程序在运行,则判断后备队列是否有作业
       if (ready.length == 0){
+        //没有作业则时间向前移
         step++;
       } else if (step >= ready[0].atime) {
+        ready.sort(com_ntime);
+        // 存在则把后备队列按照要求服务时间排序
+        // 再根据资源需求先得到满足则先执行
         for(var i = 0; i < ready.length; i++){
           running = ready.shift();
           if(memory >= running.mcount && tape >= running.tcount) {
+            // 分配资源
             running.stime = step;
             memory -= running.mcount;
             tape -= running.tcount;
@@ -367,12 +404,16 @@ function sjf(cbs, fre) {
         }
       }
     } else {
+      // 如果存在进行的作业的话，则判断是否执行完毕
       if (running.rtime != running.ntime) {
+        // 没有执行完毕则继续执行
         running.rtime++;
         running.update();
         step++;
       } else {
+        // 完成了则计算完成时间，周转时间和带权周转时间
         running.ftime = step;
+        // 回收资源
         memory += running.mcount;
         tape += running.tcount;
         running.update();
@@ -383,14 +424,15 @@ function sjf(cbs, fre) {
   }, fre);
 }
 function pf(cbs, fre) {
-  var running = null;
-  var memory = 100;
-  var tape = 5;
-  var ready = [];
-  var finish = [];
-  var step = 0;
-  cbs.sort(com_atime);
+  var running = null;   // 存储正在运行的jcb
+  var ready = [];       // 作业队列
+  var finish = [];      // 完成队列
+  var step = 0;         // 全局时间控制
+  var memory = 100;     // 总共内存
+  var tape = 5;         // 总磁带机数
+  cbs.sort(com_atime);  // 初始作业队列按照到达时间排序
   var interval = setInterval(function () {
+    //如果达到到达时间，则插入到后备队列中
     if(cbs.length != 0) {
       while (step == cbs[0].atime) {
         ready.push(cbs.shift());
@@ -398,6 +440,7 @@ function pf(cbs, fre) {
           break;
       }
     }
+    // 按照优先级从高到低排序
     function com_super(value1, value2) {
       var a = value1.super;
       var b = value2.super;
@@ -410,14 +453,19 @@ function pf(cbs, fre) {
     }
 
     if(running == null) {
-      ready.sort(com_super);
+      // 如果没有程序在运行,则判断后备队列是否有作业
       if (ready.length == 0){
+        //没有作业则时间向前移
         step++;
       } else if (step >= ready[0].atime) {
+        // 存在则把后备队列按照优先级排序
+        // 先到达的并且资源需求得到满足则先执行
+        ready.sort(com_super);
         for(var i = 0; i < ready.length; i++){
           running = ready.shift();
           if(memory >= running.mcount && tape >= running.tcount) {
             running.stime = step;
+            // 分配资源
             memory -= running.mcount;
             tape -= running.tcount;
             running.update();
@@ -429,12 +477,16 @@ function pf(cbs, fre) {
         }
       }
     } else {
+      // 如果存在进行的作业的话，则判断是否执行完毕
       if (running.rtime < running.ntime) {
+        // 没有执行完毕则继续执行
         running.rtime++;
         running.update();
         step++;
       } else {
+        // 完成了则计算完成时间，周转时间和带权周转时间
         running.ftime = step;
+        // 回收资源
         memory += running.mcount;
         tape += running.tcount;
         running.update();

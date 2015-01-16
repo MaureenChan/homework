@@ -13,6 +13,11 @@ $(document).ready(function () {
     nf.nf(nf.ready[i]);
   }
 
+  bf.free.sort(com_add);
+  wf.free.sort(com_add);
+  ff.free.sort(com_add);
+  nf.free.sort(com_add);
+
   bf.title1 = 'bf finish';
   bf.title2 = 'bf free';
   html += template('row', bf);

@@ -205,7 +205,7 @@ wf.wf = function (job) {
 ff.ff = function (job) {
   var r_free;
   var len = this.free.length;
-  this.free.sort(this.com_add);
+  this.free.sort(com_add);
   while (len--) {
     r_free = this.free.shift();
     if (r_free.size < job.need) {

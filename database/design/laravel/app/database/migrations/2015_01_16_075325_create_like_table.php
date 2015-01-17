@@ -17,6 +17,7 @@ class CreateLikeTable extends Migration {
             $table->integer('user_id')->unsigned();
             $table->integer('answer_id')->unsigned();
 
+            $table->primary(array('user_id', 'answer_id'));
             $table->foreign('user_id')
                 ->references('user_id')->on('user')
                 ->onDelete('cascade');

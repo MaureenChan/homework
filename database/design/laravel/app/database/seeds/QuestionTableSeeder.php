@@ -11,6 +11,7 @@ class QuestionTableSeeder extends Seeder {
                 'question_detail' => $faker->sentence($nbWords = 10),
                 'ask_user_id' => $faker->numberBetween($min = 1, $max = 100),
                 'answer_id' => $faker->numberBetween($min = 1, $max = 50),
+                'answer_user_id' => $faker->numberBetween($min = 1, $max = 100),
                 'question_date' => $faker->dateTime()->format('Y-m-d H:i:s')
             ));
         }

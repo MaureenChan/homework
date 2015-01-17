@@ -8,7 +8,7 @@ class GoodTableSeeder extends Seeder {
         for ($i = 0; $i < 50; $i++) {
             $good = DB::table('good')->insert(array(
                 'user_id' => $faker->numberBetween($min = 1, $max = 100),
-                'answer_id' => $faker->numberBetween($min = 1, $max = 100),
+                'answer_id' => $faker->numberBetween($min = 1, $max = 50),
             ));
         }
         

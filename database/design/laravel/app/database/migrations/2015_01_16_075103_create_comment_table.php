@@ -17,7 +17,6 @@ class CreateCommentTable extends Migration {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('answer_id')->unsigned();
-            $table->integer('comment_id')->nullable(true);
             $table->string('comment', 1000)->nullable(false);
             $table->datetime('comment_date');
 

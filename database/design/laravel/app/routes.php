@@ -22,24 +22,46 @@ Route::get('/user/login', array(
     'uses' => 'UserController@get_login'
 ));
 
+// get all users
 Route::get('/users/all', array(
     'as' => 'users',
     'uses' => 'UserController@all_user'
 ));
 
+// get all my follower
+Route::get('/user/follows', array(
+    'as' => 'followers',
+    'uses' => 'UserController@my_follower'
+));
+
+// get all my following
+Route::get('/user/followings', array(
+    'as' => 'followings',
+    'uses' => 'UserController@my_following'
+));
+
+// add follower
+Route::get('/user/follow/{user_id}', array(
+    'as' => 'follow',
+    'uses' => 'UserController@add_follower'
+));
+
+// delete follower
+Route::get('/user/unfollow/{user_id}', array(
+    'as' => 'unfollow',
+    'uses' => 'UserController@delete_follower'
+));
+
+// get user by id
 Route::get('/user/{user_id}', array(
     'as' => 'user',
     'uses' => 'UserController@get_by_id'
 ));
 
+// get my question
 Route::get('/user/{user_id}/questions', array(
     'as' => 'question',
     'uses' => 'UserController@get_questions'
-));
-
-Route::get('/user/follow/{user_id}', array(
-    'as' => 'follow',
-    'uses' => 'UserController@add_follower'
 ));
 
 Route::post('question/add_answer', array(

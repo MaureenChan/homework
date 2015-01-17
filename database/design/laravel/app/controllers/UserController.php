@@ -16,7 +16,7 @@ class UserController extends BaseController {
         return View::make('user/user')
             ->with('title', $user->name)
             ->with('user', $user)
-            ->with('my_follower', $user->is_my_follower(Auth::id()))
+            ->with('is_following', $user->is_following(Auth::id()))
             ->with('questions', $questions);
     }
 

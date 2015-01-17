@@ -23,5 +23,12 @@
     </div>
     <script src="{{{URL::asset('js/jquery.min.js')}}}"></script>
     <script src="{{{URL::asset('js/bootstrap.min.js')}}}"></script>
+    @if (Auth::check())
+    <script>
+        window.isLogin = true;
+    </script>
+    @endif
+
+    @yield('js')
 </body>
 </html>

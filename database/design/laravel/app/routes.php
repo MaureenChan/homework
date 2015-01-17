@@ -17,9 +17,21 @@ Route::get('/', array(
 ));
 
 // login stuff
+Route::get('/user/register', array(
+    'as' => 'register',
+    'uses' => 'UserController@get_register'
+));
+Route::post('/user/post_register', array(
+    'as' => 'post_register',
+    'uses' => 'UserController@post_register'
+));
 Route::get('/user/login', array(
     'as' => 'login',
     'uses' => 'UserController@get_login'
+));
+Route::post('/user/post_login', array(
+    'as' => 'post_login',
+    'uses' => 'UserController@post_login'
 ));
 
 // get all users
@@ -69,3 +81,8 @@ Route::post('question/add_answer', array(
     'uses' => 'QuestionController@add_answer'
 ));
 
+Router::filter('auth', function () {
+    if (!Auth::check()) {
+        return Redirect::route('login');
+    }
+});

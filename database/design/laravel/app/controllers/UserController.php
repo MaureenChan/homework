@@ -34,4 +34,12 @@ class UserController extends BaseController {
         }
     }
 
+    public function get_login() {
+        if (Auth::check()) {
+            return Redirect::route('home');
+        } else {
+            return View::make('user/login')->with('title', 'login page');
+        }
+    }
+
 }

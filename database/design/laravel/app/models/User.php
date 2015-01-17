@@ -30,4 +30,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     public function questions() {
         return $this->hasMany('Question', 'ask_user_id');
     }
+
+    public function is_my_follower($id) {
+        $count = Follow::where('user_id', '=', $this->user_id)
+            ->where('follower', '=', $id)
+            ->count();
+        if ($count)
+            return true;
+        else
+            return false;
+    }
 }

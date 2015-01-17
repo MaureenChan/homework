@@ -12,9 +12,11 @@ class UserController extends BaseController {
     public function get_by_id($id) {
         $user = User::find($id);
         $questions = $this->get_questions($id);
+
         return View::make('user/user')
             ->with('title', $user->name)
             ->with('user', $user)
+            ->with('my_follower', $user->is_my_follower(Auth::id()))
             ->with('questions', $questions);
     }
 
@@ -24,7 +26,7 @@ class UserController extends BaseController {
             return -1;
         } else {
             $count = Follow::where('user_id', '=', $id)->where('follower', '=', Auth::id())->count();
-            if (count <= 0) {
+            if ($count <= 0) {
                 $follow = new Follow;
                 $follow->user_id = $id;
                 $follow->follower = Auth::id();
@@ -126,7 +128,10 @@ class UserController extends BaseController {
 
     private function get_questions($id) {
         $user = User::find($id);
-        $questions = $user->questions;
+        $questions = $user->questions()
+            ->where('answer_id', '!=', 'null')
+            ->get();
+
         return $questions;
     }
 }

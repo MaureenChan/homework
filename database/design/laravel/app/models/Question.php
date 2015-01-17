@@ -8,8 +8,8 @@ class Question extends Eloquent {
         return $this->belongsTo('User', 'ask_user_id');
     }
 
-    public function answers() {
-        return $this->hasMany('Answer', 'id');
+    public function answer() {
+        return $this->hasOne('Answer', 'answer_id', 'answer_id');
     }
 
     public function add_answers() {

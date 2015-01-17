@@ -42,4 +42,18 @@ class UserController extends BaseController {
         }
     }
 
+    public function post_login() {
+    }
+
+    public function get_register() {
+        if (Auth::check()) {
+            return Redirect::route('home');
+        } else {
+            return View::make('user/register')->with('title', 'register page');
+        }
+    }
+
+    public function post_register() {
+    }
+
 }

@@ -41,13 +41,13 @@ Route::get('/users/all', array(
 ));
 
 // get all my follower
-Route::get('/user/follows', array(
+Route::get('/user/my_follower', array(
     'as' => 'followers',
     'uses' => 'UserController@my_follower'
 ));
 
 // get all my following
-Route::get('/user/followings', array(
+Route::get('/user/my_following', array(
     'as' => 'followings',
     'uses' => 'UserController@my_following'
 ));
@@ -55,13 +55,13 @@ Route::get('/user/followings', array(
 // add follower
 Route::get('/user/follow/{user_id}', array(
     'as' => 'follow',
-    'uses' => 'UserController@add_follower'
+    'uses' => 'UserController@follow'
 ));
 
 // delete follower
 Route::get('/user/unfollow/{user_id}', array(
     'as' => 'unfollow',
-    'uses' => 'UserController@delete_follower'
+    'uses' => 'UserController@unfollow'
 ));
 
 // get user by id

@@ -18,39 +18,40 @@ class UserController extends BaseController {
         return Response::json($questions);
     }
 
-    public function add_follower($id) {
+    public function follow($id) {
         $user = User::find($id);
         if ($user == null) {
             return -1;
         } else {
-            $follow = new Follow;
-            $follow->user_id = $id;
-            $follow->follower = 2;
-            $follow->save();
+            $count = Follow::where('user_id', '=', $id)->where('follower', '=', Auth::id())->count();
+            if (count <= 0) {
+                $follow = new Follow;
+                $follow->user_id = $id;
+                $follow->follower = Auth::id();
+                $follow->save();
+            }
             return 0;
         }
     }
 
-    public function delete_follower($id) {
+    public function unfollow($id) {
         $user = User::find($id);
 
         if ($user == null) {
             return -1;
         } else {
-            $follow = Follow::where('user_id', '=', $id)->where('follower', '=', 2)->delete();
+            $follow = Follow::where('user_id', '=', $id)->where('follower', '=', Auth::id())->delete();
             return 0;
         }
     }
 
     public function my_follower() {
-        $follower = Follow::where('user_id', '=', 71)->get();
-        var_dump($follower);
+        $follower = Follow::where('user_id', '=', Auth::id())->get();
         return Response::json($follower);
     }
 
     public function my_following() {
-        $following = Follow::where('follower', '=', 45)->get();
-        var_dump($following);
+        $following = Follow::where('follower', '=', Auth::id())->get();
         return Response::json($following);
     }
 

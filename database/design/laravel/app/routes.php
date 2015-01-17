@@ -82,6 +82,18 @@ Route::group(array('before' => 'my_auth'), function() {
         'uses' => 'UserController@remove_good'
     ));
 
+    // add comment
+    Route::post('/user/add_comment', array(
+        'as' => 'add_comment',
+        'uses' => 'UserController@add_comment'
+    ));
+
+    // get comment
+    Route::get('/user/comment', array(
+        'as' => 'comment',
+        'users' => 'UserController@get_comment'
+    ));
+
     // get my question
     Route::get('/user/{user_id}/questions', array(
         'as' => 'question',

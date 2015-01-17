@@ -20,4 +20,18 @@ class UserController extends BaseController {
         return Response::json($questions);
     }
 
+    public function add_follower($id) {
+        $user = User::find($id);
+        if ($user == null) {
+            echo 'null';
+            return -1;
+        } else {
+            $follow = new Follow;
+            $follow->user_id = $id;
+            $follow->follower = 2;
+            $follow->save();
+            return 0;
+        }
+    }
+
 }

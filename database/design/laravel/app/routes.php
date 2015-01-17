@@ -26,19 +26,12 @@ Route::get('/user/{user_id}', array(
     'uses' => 'UserController@get_by_id'
 ));
 
-Route::get('user/{user_id}/questions', array(
+Route::get('/user/{user_id}/questions', array(
     'as' => 'question',
     'uses' => 'UserController@get_questions'
 ));
 
-Route::get('question/{question_id}/answers', array(
-    'as' => 'answer',
-    'uses' => 'QuestionController@get_answers'
+Route::get('/user/follow/{user_id}', array(
+    'as' => 'follow',
+    'uses' => 'UserController@add_follower'
 ));
-
-Route::post('question/add_answer', array(
-    'as' => 'add_answer',
-    'uses' => 'QuestionController@add_answer'
-));
-
-

@@ -1,4 +1,4 @@
-<?php
+<?ph
 
 class QuestionController extends BaseController {
     public function get_answers($id) {

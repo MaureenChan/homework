@@ -78,7 +78,7 @@ class UserController extends BaseController {
 
         if (Auth::attempt(array(
             'name' => $name,
-            'password' => $password
+            'password' => $raw_password
         ))) {
             return Redirect::intended('/');
         } else {
@@ -110,7 +110,7 @@ class UserController extends BaseController {
         $raw_password = Input::get('password');
         $password = Hash::make($raw_password);
 
-        if (User::where('name', '=', $name)) {
+        if (User::where('name', '=', $name)->count() > 0) {
             $msg = 'user exist';
             return Response::json($msg);
         }

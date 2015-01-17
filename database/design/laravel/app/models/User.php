@@ -24,6 +24,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	protected $hidden = array('password', 'remember_token');
 
     protected $primaryKey = 'user_id';
+
+    public $timestamps = false;
     
     public function questions() {
         return $this->hasMany('Question', 'ask_user_id');

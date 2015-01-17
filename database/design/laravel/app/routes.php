@@ -81,7 +81,7 @@ Route::post('question/add_answer', array(
     'uses' => 'QuestionController@add_answer'
 ));
 
-Router::filter('auth', function () {
+Route::filter('auth', function () {
     if (!Auth::check()) {
         return Redirect::route('login');
     }

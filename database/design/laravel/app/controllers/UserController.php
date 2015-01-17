@@ -4,18 +4,18 @@ class UserController extends BaseController {
 
     public function all_user() {
         $users = User::all();
-        return Response::json($users);
+        return View::make('user/all_users')
+            ->with('title', 'login page')
+            ->with('users', $users);
     }
 
     public function get_by_id($id) {
         $user = User::find($id);
-        return Response::json($user);
-    }
-
-    public function get_questions($id) {
-        $user = User::find($id);
-        $questions = $user->questions;
-        return Response::json($questions);
+        $questions = $this->get_questions($id);
+        return View::make('user/user')
+            ->with('title', $user->name)
+            ->with('user', $user)
+            ->with('questions', $questions);
     }
 
     public function follow($id) {
@@ -124,4 +124,9 @@ class UserController extends BaseController {
         return Redirect::intended('/');
     }
 
+    private function get_questions($id) {
+        $user = User::find($id);
+        $questions = $user->questions;
+        return $questions;
+    }
 }

@@ -11,10 +11,10 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
+Route::get('/', array(
+    'as' => 'home',
+    'uses' => 'HomeController@index'
+));
 
 Route::get('/users/all', array(
     'as' => 'users',
@@ -41,4 +41,8 @@ Route::post('question/add_answer', array(
     'uses' => 'QuestionController@add_answer'
 ));
 
-
+// login stuff
+Route::get('/user/login', array(
+    'as' => 'login',
+    'uses' => 'UserController@get_login'
+));

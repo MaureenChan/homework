@@ -20,4 +20,12 @@ class UserController extends BaseController {
         return Response::json($questions);
     }
 
+    public function get_login() {
+        if (Auth::check()) {
+            return Redirect::route('home');
+        } else {
+            return View::make('user/login')->with('title', 'login page');
+        }
+    }
+
 }

@@ -3,7 +3,7 @@
 @section('content')
     <ul>
         @foreach ($users as $user)
-            <li>{{$user->name}}</li>
+            <li><a href="{{{route('user', $user->user_id)}}}">{{$user->name}}</a></li>
         @endforeach
     </ul>
 @stop

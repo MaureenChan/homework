@@ -29,9 +29,18 @@ Route::get('/user/login', array(
     'as' => 'login',
     'uses' => 'UserController@get_login'
 ));
+Route::get('/user/logout', array(
+    'as' => 'logout',
+    'uses' => 'UserController@get_logout'
+));
 Route::post('/user/post_login', array(
     'as' => 'post_login',
     'uses' => 'UserController@post_login'
+));
+
+Route::get('/me', array(
+    'as' => 'me',
+    'uses' => 'UserController@me'
 ));
 
 // get all users

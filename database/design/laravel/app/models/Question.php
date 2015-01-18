@@ -2,7 +2,7 @@
 
 class Question extends Eloquent {
     protected $table = 'question';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'question_id';
     public $timestamps = false;
 
     public function asker() {

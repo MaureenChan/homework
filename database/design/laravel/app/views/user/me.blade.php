@@ -7,10 +7,10 @@
         <div>
             <h4>Q: {{$question->question}}</h4>
         </div>
-        {{Form::open(array('url' => '/answer', 'class' => 'form-inline'))}}
+        {{Form::open(array('url' => '/answer', 'class' => 'form-inline', 'id' => 'form-answer'))}}
         <input type="hidden" name="question_id" value="{{{$question->question_id}}}">
-        <input type="text" name="answer" class="form-control">
-        <input type="submit" class="btn">
+        <input type="text" name="answer" class="form-control" required>
+        <input type="submit" class="btn btn-success">
         {{Form::close()}}
         <hr>
     @endforeach
@@ -24,3 +24,15 @@
     @endforeach
 @stop
 
+@section('js')
+<script>
+$(function () {
+    $('#form-answer').submit(function () {
+        if (!isLogin) {
+            location.href = '{{{route('login')}}}';
+            return false;
+        }
+    });
+});
+</script>
+@stop

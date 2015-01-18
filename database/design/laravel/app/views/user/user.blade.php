@@ -16,7 +16,7 @@
         </div>
     @endforeach
 <div>
-{{Form::open(array('url' => 'ask', 'method' => 'post'))}}
+{{Form::open(array('url' => 'ask', 'method' => 'post', 'id' => 'form-ask'))}}
 <input type="hidden" name="user_id" value="{{{$user->user_id}}}">
 {{Form::text('question')}}
 {{Form::submit('Submit')}}
@@ -29,6 +29,12 @@
 $(function () {
     $('#follow').click(changeFollowStatus);
     $('#unfollow').click(changeFollowStatus);
+    $('#form-ask').submit(function () {
+        if (!isLogin) {
+            location.href = '{{{route('login')}}}';
+            return false;
+        }
+    });
     function changeFollowStatus() {
         var id = this.id;
         if (id === 'follow') {

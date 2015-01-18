@@ -12,7 +12,7 @@
     @foreach ($questions as $question)
         <div>
             <input type="hidden" value="{{{$question->answer->answer_id}}}">
-            <h4>Q: {{$question->question}}</h4>
+            <h4>Q: {{$question->question}} -- {{$question->asker->name}}</h4>
             <p>A: {{$question->answer->answer}}</p>
             @if (Auth::user()->is_good($question->answer->answer_id))
                 <button class="ungood btn btn-danger">取消good</button>
@@ -25,8 +25,8 @@
 <div>
 {{Form::open(array('url' => 'ask', 'method' => 'post', 'id' => 'form-ask'))}}
 <input type="hidden" name="user_id" value="{{{$user->user_id}}}">
-{{Form::text('question')}}
-{{Form::submit('Submit')}}
+<input type="text" class="form-control" name="question" placeholder="answer">
+<input type="submit" class="btn btn-success">
 {{Form::close()}}
 </div>
 @stop

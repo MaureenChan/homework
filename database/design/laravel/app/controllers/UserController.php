@@ -20,6 +20,22 @@ class UserController extends BaseController {
             ->with('questions', $questions);
     }
 
+    public function me() {
+        $me = Auth::user();
+        $questions_to_answer = $me
+            ->questions()
+            ->whereNull('answer_id')
+            ->get();
+        $questions_answered = $me
+            ->questions()
+            ->whereNotNull('answer_id')
+            ->get();
+        return View::make('user/me')
+            ->with('title', Auth::user()->name)
+            ->with('questions_to_answer', $questions_to_answer)
+            ->with('questions_answered', $questions_answered);
+    }
+
     public function follow($id) {
         $user = User::find($id);
         if ($user == null) {

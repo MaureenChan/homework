@@ -160,6 +160,13 @@ class UserController extends BaseController {
         return -1;
     }
 
+    public function get_login() {
+        if (Auth::check()) {
+            return Redirect::route('home');
+        } else {
+            return View::make('user/login')->with('title', 'login page');
+        }
+    }
 
     public function post_login() {
         $rules = array(

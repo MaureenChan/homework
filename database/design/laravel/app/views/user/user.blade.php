@@ -15,11 +15,11 @@
             <h4>Q: {{$question->question}}</h4>
             <p>A: {{$question->answer->answer}}</p>
             @if (Auth::user()->is_good($question->answer->answer_id))
-                <button id="ungood" class="btn btn-danger">取消good</button>
-                <button id="good" style="display:none" class="btn btn-success">good</button>
+                <button class="ungood" class="btn btn-danger">取消good</button>
+                <button class="good" style="display:none" class="btn btn-success">good</button>
             @else
-                <button id="unGood" style="display:none" class="btn btn-danger">取消good</button>
-                <button id="good"class="btn btn-success">good</button>
+                <button class="unGood" style="display:none" class="btn btn-danger">取消good</button>
+                <button class="good"class="btn btn-success">good</button>
             @endif
         </div>
         <hr>
@@ -38,8 +38,8 @@
 $(function () {
     $('#follow').click(changeFollowStatus);
     $('#unfollow').click(changeFollowStatus);
-    $('#good').click(changeGoodStatus);
-    $('#ungood').click(changeGoodStatus);
+    $('.good').click(changeGoodStatus);
+    $('.ungood').click(changeGoodStatus);
     $('#form-ask').submit(function () {
         if (!isLogin) {
             location.href = '{{{route('login')}}}';

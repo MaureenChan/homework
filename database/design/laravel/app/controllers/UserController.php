@@ -13,6 +13,9 @@ class UserController extends BaseController {
     // user page
     public function get_by_id($id) {
         $user = User::find($id);
+        if ($id == Auth::id()) {
+            return Redirect::route('me');
+        }
         $questions = $user
             ->questions()
             ->whereNotNull('answer_id')

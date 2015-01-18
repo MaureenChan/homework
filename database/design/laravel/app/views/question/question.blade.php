@@ -19,6 +19,8 @@
 <div>
     <h3>Q:{{$question->question}}</h3>
     <p class='question'>A:{{$question->answer->answer}}</p>
+    <a href="{{route('user', $question->answer_user_id)}}">{{$question->answerer->name}}</a> /
+    <span class="date">{{$question->answer->answer_date}}</span>
 </div>
 <div class="comment">
     <h4>Comment:</h4>

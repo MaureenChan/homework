@@ -6,7 +6,7 @@ class UserController extends BaseController {
     public function all_user() {
         $users = User::all();
         return View::make('user/all_users')
-            ->with('title', 'all users')
+            ->with('title', 'login page')
             ->with('users', $users);
     }
 
@@ -65,10 +65,6 @@ class UserController extends BaseController {
     }
 
     public function answer() {
-        //$question_id = intval(Input::get('question_id'));
-        //$question = Question::find($question_id);
-        //var_dump($question_id);
-        //var_dump(Input::get('question_id'));
         $question = Question::find(Input::get('question_id'));
         var_dump($question);
         if ($question == null) {
@@ -128,6 +124,33 @@ class UserController extends BaseController {
         $following = Follow::where('follower', '=', Auth::id())->get();
         return Response::json($following);
     }
+
+    // add good
+    public function add_good($answer_id) {
+        $answer = Answer::find($answer_id);
+        if ($answer) {
+            $good = new Good;
+            $good->user_id = Auth::id();
+            $good->answer_id = $answer_id;
+            $good->save();
+            return 0;
+        }
+        else
+            return -1;
+    } 
+
+    // remove good
+    public function remove_good($answer_id) {
+        $answer = Answer::find($answer_id);
+        if ($answer) {
+            $good = Good::where('user_id', '=', Auth::id())
+                ->where('answer_id', '=', $answer_id)
+                ->delete();
+            return 0;
+        }
+        return -1;
+    }
+
 
     public function get_login() {
         if (Auth::check()) {

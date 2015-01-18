@@ -40,4 +40,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         else
             return false;
     }
+
+    public function is_good($answer_id) {
+        $count = Good::where('user_id', '=', $this->user_id)
+            ->where('answer_id', '=', $answer_id)
+            ->count();
+        if ($count)
+            return true;
+        else 
+            return false;
+    }
 }

@@ -85,18 +85,18 @@ Route::group(array('before' => 'my_auth'), function() {
     // add comment
     Route::post('/user/add_comment', array(
         'as' => 'add_comment',
-        'uses' => 'UserController@add_comment'
+        'uses' => 'QuestionController@add_comment'
     ));
 
     // get comment
     Route::get('/user/comment', array(
         'as' => 'comment',
-        'users' => 'UserController@get_comment'
+        'users' => 'QuestionController@get_comment'
     ));
 
     // get my question
     Route::get('/user/{user_id}/questions', array(
-        'as' => 'question',
+        'as' => 'questions',
         'uses' => 'UserController@get_questions'
     ));
 
@@ -128,4 +128,9 @@ Route::filter('my_auth', function () {
 Route::get('/user/{user_id}', array(
     'as' => 'user',
     'uses' => 'UserController@get_by_id'
+));
+
+Route::get('/question/{question_id}', array(
+    'as' => 'question',
+    'uses' => 'QuestionController@question'
 ));

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>{{{$title}}}</title>
     <link rel="stylesheet" href="{{{URL::asset('css/bootstrap.min.css')}}}">
+    @yield('css')
 </head>
 <body>
     <nav class="navbar navbar-default">

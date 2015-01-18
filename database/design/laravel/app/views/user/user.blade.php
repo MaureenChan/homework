@@ -1,31 +1,53 @@
 @extends('layout')
 
+@section('css')
+<style>
+.username {
+    display: inline-block;
+}
+.follow-button {
+    display: inline-block;
+    position: relative;
+    left: 10px;
+    top: -10px;
+}
+.question-item {
+    margin-bottom: 30px;
+}
+</style>
+@stop
+
 @section('content')
-<h1>{{$user->name}}</h1>
+<h1 class="username">{{$user->name}}</h1>
+<div class="follow-button">
 @if ($is_following)
-    <button id="unfollow" class="btn btn-danger">取消关注</button>
-    <button id="follow" style="display:none" class="btn btn-success">关注</button>
+    <button id="unfollow" class="btn btn-danger">Unfollow</button>
+    <button id="follow" style="display:none" class="btn btn-success">Follow</button>
 @else
-    <button id="unfollow" style="display:none" class="btn btn-danger">取消关注</button>
-    <button id="follow" class="btn btn-success">关注</button>
+    <button id="unfollow" style="display:none" class="btn btn-danger">Unfollow</button>
+    <button id="follow" class="btn btn-success">Follow</button>
 @endif
+</div>
+<hr>
+
     @foreach ($questions as $question)
-        <div>
+        <div class="question-item">
             <input type="hidden" value="{{{$question->answer->answer_id}}}">
             <h4>Q: {{$question->question}} -- {{$question->asker->name}}</h4>
             <p>A: {{$question->answer->answer}}</p>
             @if (Auth::user()->is_good($question->answer->answer_id))
-                <button class="ungood btn btn-danger">取消good</button>
+                <button class="ungood btn btn-danger">dislike</button>
             @else
-                <button class="good btn btn-success">good</button>
+                <button class="good btn btn-success">like</button>
             @endif
         </div>
-        <hr>
     @endforeach
 <div>
-{{Form::open(array('url' => 'ask', 'method' => 'post', 'id' => 'form-ask'))}}
+<h3>Ask your question to {{$user->name}}:</h3>
+{{Form::open(array('url' => 'ask', 'method' => 'post', 'id' => 'form-ask',  'class' => 'form-ask'))}}
 <input type="hidden" name="user_id" value="{{{$user->user_id}}}">
-<input type="text" class="form-control" name="question" placeholder="answer">
+<input type="text" class="form-control" name="question" placeholder="your question">
+<br>
 <input type="submit" class="btn btn-success">
 {{Form::close()}}
 </div>
@@ -85,13 +107,13 @@ $(function () {
                     $this.removeClass('good');
                     $this.addClass('btn-danger');
                     $this.addClass('ungood');
-                    $this.html('ungood');
+                    $this.html('dislike');
                 } else {
                     $this.removeClass('btn-danger');
                     $this.removeClass('ungood');
                     $this.addClass('btn-success');
                     $this.addClass('good');
-                    $this.html('good');
+                    $this.html('like');
                 }
             }
         });

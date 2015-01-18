@@ -12,7 +12,7 @@
     @foreach ($questions as $question)
         <div>
             <input type="hidden" value="{{{$question->answer->answer_id}}}">
-            <h4>Q: {{$question->question}} -- {{$question->asker->name}}</h4>
+            <h4><a href="{{{route('question', $question->question_id)}}}">Q: {{$question->question}} -- {{$question->asker->name}}</a></h4>
             <p>A: {{$question->answer->answer}}</p>
             @if (Auth::user()->is_good($question->answer->answer_id))
                 <button class="ungood btn btn-danger">取消good</button>

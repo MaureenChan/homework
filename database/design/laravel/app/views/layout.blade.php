@@ -9,6 +9,7 @@
 <body>
     <nav class="navbar navbar-default">
         <a class="navbar-brand" href="{{{URL::to('/')}}}">Q&A</a>
+        <a class="navbar-brand" href="{{{URL::to('/users/all')}}}">All_Users</a>
         <ul class="nav nav-pills pull-right">
         @if (Auth::check())
         <li><a href="{{{route('me')}}}">{{Auth::user()->name}}</a></li>

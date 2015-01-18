@@ -1,6 +1,7 @@
 <?php
 class Answer extends Eloquent {
     protected $table = 'answer';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'answer_id';
+    public $timestamps = false;
 
 }

@@ -7,8 +7,9 @@
         <div>
             <h4>Q: {{$question->question}}</h4>
         </div>
-        {{Form::open(array('url' => 'user/post_login', 'class' => 'form-inline'))}}
-        <input type="text" class="form-control">
+        {{Form::open(array('url' => '/answer', 'class' => 'form-inline'))}}
+        <input type="hidden" name="question_id" value="{{{$question->question_id}}}">
+        <input type="text" name="answer" class="form-control">
         <input type="submit" class="btn">
         {{Form::close()}}
         <hr>

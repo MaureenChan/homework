@@ -64,6 +64,26 @@ class UserController extends BaseController {
         }
     }
 
+    public function answer() {
+        //$question_id = intval(Input::get('question_id'));
+        //$question = Question::find($question_id);
+        //var_dump($question_id);
+        //var_dump(Input::get('question_id'));
+        $question = Question::find(Input::get('question_id'));
+        var_dump($question);
+        if ($question == null) {
+            return -1;
+        } else {
+            $answer = new Answer;
+            $answer->save();
+            $question->answer_id = $answer->answer_id;
+            var_dump($question->answer_id);
+            $answer->answer = Input::get('answer');
+            $question->save();
+            $answer->save();
+        }
+        return Redirect::route('me');
+    }
 
     // follow someone
     public function follow($id) {

@@ -88,6 +88,11 @@ Route::group(array('before' => 'my_auth'), function() {
         return Redirect::route('login');
     }));
 
+    Route::post('/answer', array(
+        'as' => 'answer',
+        'uses' => 'UserController@answer'
+    ));
+
 });
 
 Route::filter('my_auth', function () {

@@ -13,7 +13,10 @@ class UserController extends BaseController {
     // user page
     public function get_by_id($id) {
         $user = User::find($id);
-        $questions = $this->get_questions($id);
+        $questions = $user
+            ->questions()
+            ->whereNotNull('answer_id')
+            ->get();
 
         return View::make('user/user')
             ->with('title', $user->name)
@@ -168,16 +171,5 @@ class UserController extends BaseController {
         $user->save();
         Auth::login($user);
         return Redirect::intended('/');
-    }
-
-    // get user question which has an answer
-    private function get_questions($id) {
-        $user = User::find($id);
-        $questions = $user->questions()
-            ->whereNotNull('answer_id')
-            ->get();
-
-        var_dump($questions);
-        return $questions;
     }
 }

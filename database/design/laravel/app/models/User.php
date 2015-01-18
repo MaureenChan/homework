@@ -28,7 +28,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     public $timestamps = false;
     
     public function questions() {
-        return $this->hasMany('Question', 'ask_user_id');
+        return $this->hasMany('Question', 'answer_user_id');
     }
 
     public function is_my_follower($id) {

@@ -3,6 +3,7 @@
 class Question extends Eloquent {
     protected $table = 'question';
     protected $primaryKey = 'id';
+    public $timestamps = false;
 
     public function asker() {
         return $this->belongsTo('User', 'ask_user_id');
@@ -12,7 +13,4 @@ class Question extends Eloquent {
         return $this->hasOne('Answer', 'answer_id', 'answer_id');
     }
 
-    public function add_answers() {
-
-    }
 }

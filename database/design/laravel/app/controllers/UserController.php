@@ -2,6 +2,7 @@
 
 class UserController extends BaseController {
 
+    // get all user, home page
     public function all_user() {
         $users = User::all();
         return View::make('user/all_users')
@@ -9,6 +10,7 @@ class UserController extends BaseController {
             ->with('users', $users);
     }
 
+    // user page
     public function get_by_id($id) {
         $user = User::find($id);
         $questions = $this->get_questions($id);
@@ -20,12 +22,35 @@ class UserController extends BaseController {
             ->with('questions', $questions);
     }
 
+    public function ask() {
+        $user = User::find(Input::get('user_id'));
+        if ($user == null) {
+            return -1;
+        } else {
+            $question = new Question;
+            $question->question = Input::get('question');
+            if ($question->question) {
+                $question->ask_user_id = Auth::id();
+                $question->answer_user_id = $user->user_id;
+                $question->save();
+            } else {
+                var_dump("Question can't be empty");
+            }
+            return Redirect::route('user', $user->user_id);
+        }
+    }
+
+
+    // follow someone
     public function follow($id) {
         $user = User::find($id);
         if ($user == null) {
             return -1;
         } else {
-            $count = Follow::where('user_id', '=', $id)->where('follower', '=', Auth::id())->count();
+            $count = Follow::where('user_id', '=', $id)
+                ->where('follower', '=', Auth::id())
+                ->count();
+
             if ($count <= 0) {
                 $follow = new Follow;
                 $follow->user_id = $id;
@@ -36,6 +61,7 @@ class UserController extends BaseController {
         }
     }
 
+    // unfollow someone
     public function unfollow($id) {
         $user = User::find($id);
 
@@ -47,11 +73,13 @@ class UserController extends BaseController {
         }
     }
 
+    // get my follower
     public function my_follower() {
         $follower = Follow::where('user_id', '=', Auth::id())->get();
         return Response::json($follower);
     }
 
+    //get my following
     public function my_following() {
         $following = Follow::where('follower', '=', Auth::id())->get();
         return Response::json($following);
@@ -126,12 +154,14 @@ class UserController extends BaseController {
         return Redirect::intended('/');
     }
 
+    // get user question which has an answer
     private function get_questions($id) {
         $user = User::find($id);
         $questions = $user->questions()
-            ->where('answer_id', '!=', 'null')
+            ->whereNotNull('answer_id')
             ->get();
 
+        var_dump($questions);
         return $questions;
     }
 }

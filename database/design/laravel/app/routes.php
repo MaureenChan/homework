@@ -86,9 +86,9 @@ Route::get('/user/{user_id}/questions', array(
 ));
 
 
-Route::post('question/add_answer', array(
-    'as' => 'add_answer',
-    'uses' => 'QuestionController@add_answer'
+Route::post('/ask', array(
+    'as' => 'ask',
+    'uses' => 'UserController@ask'
 ));
 
 Route::filter('auth', function () {

@@ -13,4 +13,11 @@
             <p>A: {{$question->answer->answer}}</p>
         </div>
     @endforeach
+<div>
+{{Form::open(array('url' => 'ask', 'method' => 'post'))}}
+<input type="hidden" name="user_id" value="{{{$user->user_id}}}">
+{{Form::text('question')}}
+{{Form::submit('Submit')}}
+{{Form::close()}}
+</div>
 @stop

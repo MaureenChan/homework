@@ -71,13 +71,13 @@ Route::group(array('before' => 'my_auth'), function() {
     ));
 
     // add good
-    Route::get('/user/good', array(
+    Route::get('/user/good/{answer_id}', array(
         'as' => 'good',
         'uses' => 'UserController@add_good'
     ));
 
     // remove good
-    Route::get('/user/ungood', array(
+    Route::get('/user/ungood/{answer_id}', array(
         'as' => 'ungood',
         'uses' => 'UserController@remove_good'
     ));

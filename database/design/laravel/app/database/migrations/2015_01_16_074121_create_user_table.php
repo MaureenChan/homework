@@ -15,9 +15,10 @@ class CreateUserTable extends Migration {
         Schema::create('user', function($table) {
             $table->increments('user_id');
             $table->string('name', 20)->nullable(false);
-            $table->string('password', 16)->nullable(false);
+            $table->string('password', 100)->nullable(false);
             $table->string('gender', 10)->nullable(false);
             $table->datetime('birthday');
+            $table->string('remember_token', 100)->nullable(true);
         });
 	}
 

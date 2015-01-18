@@ -13,8 +13,10 @@ class UserController extends BaseController {
     // user page
     public function get_by_id($id) {
         $user = User::find($id);
-        if ($id == Auth::id()) {
-            return Redirect::route('me');
+        if (Auth::check()) {
+            if ($id == Auth::id()) {
+                return Redirect::route('me');
+            }
         }
         $questions = $user
             ->questions()
@@ -128,6 +130,8 @@ class UserController extends BaseController {
 
         $name = Input::get('name');
         $raw_password = Input::get('password');
+        $password = Hash::make($raw_password);
+        echo $password;
 
         if (Auth::attempt(array(
             'name' => $name,
@@ -162,6 +166,7 @@ class UserController extends BaseController {
         $name = Input::get('name');
         $raw_password = Input::get('password');
         $password = Hash::make($raw_password);
+
 
         if (User::where('name', '=', $name)->count() > 0) {
             $msg = 'user exist';

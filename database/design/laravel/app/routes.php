@@ -41,8 +41,7 @@ Route::get('/users/all', array(
     'uses' => 'UserController@all_user'
 ));
 
-
-Route::group(array('before' => 'auth'), function() {
+Route::group(array('before' => 'my_auth'), function() {
     Route::get('/me', array(
         'as' => 'me',
         'uses' => 'UserController@me'
@@ -91,11 +90,12 @@ Route::group(array('before' => 'auth'), function() {
 
 });
 
-Route::filter('auth', function () {
+Route::filter('my_auth', function () {
     if (!Auth::check()) {
         return Redirect::route('login');
     }
 });
+
 // get user by id
 Route::get('/user/{user_id}', array(
     'as' => 'user',

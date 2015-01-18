@@ -6,7 +6,7 @@ class UserController extends BaseController {
     public function all_user() {
         $users = User::all();
         return View::make('user/all_users')
-            ->with('title', 'login page')
+            ->with('title', 'all users')
             ->with('users', $users);
     }
 

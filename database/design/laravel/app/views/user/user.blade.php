@@ -15,11 +15,9 @@
             <h4>Q: {{$question->question}}</h4>
             <p>A: {{$question->answer->answer}}</p>
             @if (Auth::user()->is_good($question->answer->answer_id))
-                <button class="ungood" class="btn btn-danger">取消good</button>
-                <button class="good" style="display:none" class="btn btn-success">good</button>
+                <button class="ungood btn btn-danger">取消good</button>
             @else
-                <button class="unGood" style="display:none" class="btn btn-danger">取消good</button>
-                <button class="good"class="btn btn-success">good</button>
+                <button class="good btn btn-success">good</button>
             @endif
         </div>
         <hr>
@@ -68,23 +66,32 @@ $(function () {
     }
     function changeGoodStatus() {
         var id = this.id;
+        var $this = $(this);
+        var isGood = $this.hasClass('good');
+        console.log(isGood);
         var answer_id = $(this).parent().find('input[type="hidden"]').val();
         console.log(answer_id);
-        if (id === 'good') {
+        if (isGood) {
             var url = '/user/good/' + answer_id;
-        } else if (id === 'ungood'){
+        } else {
             var url = '/user/ungood/' + answer_id;
         }
         console.log(url);
         $.get(url, function (res) {
             console.log('res', res);
             if (res == 0) {
-                if (id == 'good') {
-                    $('#ungood').show();
-                    $('#good').hide();
+                if (isGood) {
+                    $this.removeClass('btn-success');
+                    $this.removeClass('good');
+                    $this.addClass('btn-danger');
+                    $this.addClass('ungood');
+                    $this.html('ungood');
                 } else {
-                    $('#ungood').hide();
-                    $('#good').show();
+                    $this.removeClass('btn-danger');
+                    $this.removeClass('ungood');
+                    $this.addClass('btn-success');
+                    $this.addClass('good');
+                    $this.html('good');
                 }
             }
         });

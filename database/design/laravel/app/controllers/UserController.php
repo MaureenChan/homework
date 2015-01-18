@@ -129,10 +129,15 @@ class UserController extends BaseController {
     public function add_good($answer_id) {
         $answer = Answer::find($answer_id);
         if ($answer) {
-            $good = new Good;
-            $good->user_id = Auth::id();
-            $good->answer_id = $answer_id;
-            $good->save();
+            $count = Good::where('answer_id', '=', $answer_id)
+                ->where('user_id', '=', Auth::id())
+                ->count();
+            if ($count <= 0) {
+                $good = new Good;
+                $good->user_id = Auth::id();
+                $good->answer_id = $answer_id;
+                $good->save();
+            }
             return 0;
         }
         else

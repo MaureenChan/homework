@@ -50,4 +50,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         else 
             return false;
     }
+
+    public function followers() {
+        return $this->belongsToMany('User', 'follow', 'user_id', 'follower');
+    }
+
+    public function followings() {
+        return $this->belongsToMany('User', 'follow', 'follower', 'user_id');
+    }
 }

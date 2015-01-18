@@ -47,15 +47,15 @@ Route::group(array('before' => 'my_auth'), function() {
         'uses' => 'UserController@me'
     ));
     // get all my follower
-    Route::get('/user/my_follower', array(
+    Route::get('followers', array(
         'as' => 'followers',
-        'uses' => 'UserController@my_follower'
+        'uses' => 'UserController@followers'
     ));
 
     // get all my following
-    Route::get('/user/my_following', array(
+    Route::get('followings', array(
         'as' => 'followings',
-        'uses' => 'UserController@my_following'
+        'uses' => 'UserController@followings'
     ));
 
     // add follower

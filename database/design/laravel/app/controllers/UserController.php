@@ -113,16 +113,20 @@ class UserController extends BaseController {
         }
     }
 
-    // get my follower
-    public function my_follower() {
-        $follower = Follow::where('user_id', '=', Auth::id())->get();
-        return Response::json($follower);
+    // get my followers
+    public function followers() {
+        $followers = Auth::user()->followers;
+        return View::make('user/followers')
+            ->with('title', 'my followers')
+            ->with('followers', $followers);
     }
 
-    //get my following
-    public function my_following() {
-        $following = Follow::where('follower', '=', Auth::id())->get();
-        return Response::json($following);
+    //get my followings
+    public function followings() {
+        $followings = Auth::user()->followings;
+        return View::make('user/followings')
+            ->with('title', 'my followings')
+            ->with('followings', $followings);
     }
 
     // add good

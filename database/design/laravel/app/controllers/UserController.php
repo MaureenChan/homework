@@ -71,6 +71,16 @@ class UserController extends BaseController {
         }
     }
 
+    public function remove_question($question_id) {
+        if (Question::find($question_id)) {
+            $question = Question::find($question_id)->delete();
+            return Redirect::route('user', Auth::id());
+        } else {
+            return Redirect::route('user', Auth::id());
+        }
+
+    }
+
     public function answer() {
         $question = Question::find(Input::get('question_id'));
         var_dump($question);
@@ -173,18 +183,6 @@ class UserController extends BaseController {
         return View::make('like')
             ->with('title', 'Like')
             ->with('answer', $answers);
-
-        //foreach ($answers as $answer){
-            //var_dump($answer->id);
-        //}
-
-        //$questions = $answers->question;
-        ////$answers = Good::where('user_id', '=', Auth::id())->get();
-        //var_dump($questions);
-            
-        var_dump($answers);
-        //var_dump("--------");
-            
     }
 
     public function get_login() {

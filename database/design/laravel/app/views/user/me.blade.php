@@ -20,6 +20,9 @@
                 <div class="question-item">
                     <h4>Q: {{$question->question}} 
                         -- <a href="{{route('user', $question->asker->user_id)}}">{{$question->asker->name}}</a> 
+                    <span>
+                        <a href="{{route('remove_question', $question->question_id)}}">remove</a>
+                    </span>
                     </h4>
                 </div>
                 {{Form::open(array('url' => '/answer', 'class' => 'form-inline', 'id' => 'form-answer'))}}
@@ -35,7 +38,11 @@
             @foreach ($questions_answered as $question)
                 <div class="question-item">
                     <h4><a href="{{route('question', $question->question_id)}}">Q: {{$question->question}}</a> 
-                        -- <a href="{{route('user', $question->asker->user_id)}}">{{$question->asker->name}}</a> </h4>
+                        -- <a href="{{route('user', $question->asker->user_id)}}">{{$question->asker->name}}</a> 
+                    <span>
+                        <a href="{{route('remove_question', $question->question_id)}}">remove</a>
+                    </span>
+</h4>
                     <p>A: {{$question->answer->answer}}</p>
                 </div>
             @endforeach
@@ -45,8 +52,12 @@
             <hr>
             @foreach ($questions_to_be_answered as $question)
                 <div class="question-item">
-                    <h4>Q: {{$question->question}} 
-                        -- <a href="{{route('user', $question->answerer->user_id)}}">{{$question->answerer->name}}</a> </h4>
+                <h4>Q: {{$question->question}} 
+                    -- <a href="{{route('user', $question->answerer->user_id)}}">{{$question->answerer->name}}</a>
+                    <span>
+                        <a href="{{route('remove_question', $question->question_id)}}">remove</a>
+                    </span>
+                 </h4>
                 </div>
             @endforeach
         </div>

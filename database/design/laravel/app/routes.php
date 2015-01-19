@@ -117,6 +117,11 @@ Route::group(array('before' => 'my_auth'), function() {
         'uses' => 'UserController@ask'
     ));
 
+    Route::get('/remove_question/{question_id}', array(
+        'as' =>'remove_question',
+        'uses' => 'UserController@remove_question'
+    ));
+
     Route::get('/logout', array('as' => 'logout', function(){
         Auth::logout();
         return Redirect::route('login');

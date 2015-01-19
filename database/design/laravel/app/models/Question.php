@@ -16,4 +16,5 @@ class Question extends Eloquent {
     public function answerer() {
         return $this->hasOne('User', 'user_id', 'answer_user_id');
     }
+
 }

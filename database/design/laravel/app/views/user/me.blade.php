@@ -13,12 +13,14 @@
 <a href="{{route('followers')}}">followers({{count(Auth::user()->followers)}})</a> /
 <a href="{{route('followings')}}">followings({{count(Auth::user()->followings)}})</a>
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <h2>Questions to answer:</h2>
             <hr>
             @foreach ($questions_to_answer as $question)
                 <div class="question-item">
-                    <h4>Q: {{$question->question}} -- <a href="{{route('user', $question->asker->user_id)}}">{{$question->asker->name}}</a> </h4>
+                    <h4>Q: {{$question->question}} 
+                        -- <a href="{{route('user', $question->asker->user_id)}}">{{$question->asker->name}}</a> 
+                    </h4>
                 </div>
                 {{Form::open(array('url' => '/answer', 'class' => 'form-inline', 'id' => 'form-answer'))}}
                 <input type="hidden" name="question_id" value="{{{$question->question_id}}}">
@@ -27,13 +29,24 @@
                 {{Form::close()}}
             @endforeach
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <h2>Questions answered:</h2>
             <hr>
             @foreach ($questions_answered as $question)
                 <div class="question-item">
-                    <h4>Q: {{$question->question}} -- <a href="{{route('user', $question->asker->user_id)}}">{{$question->asker->name}}</a> </h4>
+                    <h4><a href="{{route('question', $question->question_id)}}">Q: {{$question->question}}</a> 
+                        -- <a href="{{route('user', $question->asker->user_id)}}">{{$question->asker->name}}</a> </h4>
                     <p>A: {{$question->answer->answer}}</p>
+                </div>
+            @endforeach
+        </div>
+        <div class="col-lg-4">
+            <h2>Questions to be answered:</h2>
+            <hr>
+            @foreach ($questions_to_be_answered as $question)
+                <div class="question-item">
+                    <h4>Q: {{$question->question}} 
+                        -- <a href="{{route('user', $question->answerer->user_id)}}">{{$question->answerer->name}}</a> </h4>
                 </div>
             @endforeach
         </div>

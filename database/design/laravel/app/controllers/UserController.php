@@ -40,10 +40,17 @@ class UserController extends BaseController {
             ->questions()
             ->whereNotNull('answer_id')
             ->get();
+        $questions_to_be_answered = $me
+            ->my_questions()
+            ->whereNull('answer_id')
+            ->get();
+
         return View::make('user/me')
             ->with('title', Auth::user()->name)
             ->with('questions_to_answer', $questions_to_answer)
+            ->with('questions_to_be_answered', $questions_to_be_answered)
             ->with('questions_answered', $questions_answered);
+
     }
 
     public function ask() {

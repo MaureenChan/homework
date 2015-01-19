@@ -8,4 +8,6 @@ class Answer extends Eloquent {
         return $this->hasMany('Comment', 'answer_id')
             ->orderBy('comment_date', 'desc');
     }
+
+
 }

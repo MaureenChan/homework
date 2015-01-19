@@ -11,10 +11,6 @@
 |
 */
 
-Route::get('/', array(
-    'as' => 'home',
-    'uses' => 'UserController@me'
-));
 
 
 // login stuff
@@ -42,18 +38,22 @@ Route::get('/users/all', array(
 ));
 
 Route::group(array('before' => 'my_auth'), function() {
+    Route::get('/', array(
+        'as' => 'home',
+        'uses' => 'UserController@me'
+    ));
     Route::get('/me', array(
         'as' => 'me',
         'uses' => 'UserController@me'
     ));
     // get all my follower
-    Route::get('followers', array(
+    Route::get('/user/followers', array(
         'as' => 'followers',
         'uses' => 'UserController@followers'
     ));
 
     // get all my following
-    Route::get('followings', array(
+    Route::get('/user/followings', array(
         'as' => 'followings',
         'uses' => 'UserController@followings'
     ));
@@ -83,15 +83,15 @@ Route::group(array('before' => 'my_auth'), function() {
     ));
 
     // add comment
-    Route::post('/user/add_comment', array(
+    Route::post('/question/add_comment', array(
         'as' => 'add_comment',
         'uses' => 'QuestionController@add_comment'
     ));
 
     // get comment
-    Route::get('/user/comment', array(
+    Route::get('/question/comment', array(
         'as' => 'comment',
-        'users' => 'QuestionController@get_comment'
+        'uses' => 'QuestionController@get_comment'
     ));
 
     // get my question
@@ -132,5 +132,10 @@ Route::get('/user/{user_id}', array(
 
 Route::get('/question/{question_id}', array(
     'as' => 'question',
+    'uses' => 'QuestionController@question'
+));
+
+Route::get('/question/{question_id}', array(
+    'as' => 'question/',
     'uses' => 'QuestionController@question'
 ));

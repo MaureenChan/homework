@@ -17,13 +17,20 @@ class QuestionController extends BaseController {
     // add comment
     public function add_comment() {
         $answer_id = Input::get('answer_id');
+        $question_id = Input::get('question_id');
         $answer = Answer::find($answer_id);
         if ($answer) {
             $comment = new Comment;
             $comment->user_id = Auth::id();
             $comment->answer_id = $answer_id;
             $comment->comment = Input::get('comment');
+            $comment->save();
+            return Redirect::route('question/', $question_id);
         }
+    }
+
+    public function remove_comment() {
+
     }
 
     // get comment

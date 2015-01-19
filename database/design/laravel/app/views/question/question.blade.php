@@ -24,6 +24,12 @@
 </div>
 <div class="comment">
     <h4>Comment:</h4>
+    {{Form::open(array('url' => '/question/add_comment',  'method' => 'post',  'class' => 'form-inline'))}}
+    <input type="hidden" name="answer_id" value="{{{$question->answer->answer_id}}}" >
+    <input type="hidden" name="question_id" value="{{{$question->question_id}}}" >
+    <input type="text" class="form-contorol" name="comment" placeholder="your comment">
+    <input type="submit" class="btn btn-success">
+    {{Form::close()}}
     @foreach ($question->answer->comments as $comment)
         <div class="comment-item">
             <p>

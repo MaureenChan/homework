@@ -12,7 +12,9 @@
         <a class="navbar-brand" href="{{{URL::to('/users/all')}}}">All_Users</a>
         @if (Auth::check())
         <a class="navbar-brand" href="{{{URL::to('/user/my_good')}}}">Like</a>
+        @endif
         <ul class="nav nav-pills pull-right">
+        @if (Auth::check())
         <li><a href="{{{route('me')}}}">{{Auth::user()->name}}</a></li>
         <li><a href="{{{route('logout')}}}">logout</a></li>
         @else

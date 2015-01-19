@@ -16,8 +16,8 @@ class CreateAnswerTable extends Migration {
         Schema::create('answer', function($table) {
             $table->increments('answer_id');
             $table->string('answer', 1000)->nullable(false);
-            $table->string('status', 20)->nullable(false);
             $table->datetime('answer_date');
+            $table->index('answer_id');
 
         });
 	}

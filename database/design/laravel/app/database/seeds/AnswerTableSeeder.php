@@ -5,10 +5,9 @@ class AnswerTableSeeder extends Seeder {
         $faker = Faker\Factory::create();
         $faker->seed(1234);
 
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $answer = DB::table('answer')->insert(array(
-                'answer' => $faker->sentence($nbWords = 10),
-                'status' => $faker->numberBetween($min = 0, $max = 1),
+                'answer' => $faker->sentence($nbWords = 100),
                 'answer_date' => $faker->dateTime()->format('Y-m-d H:i:s')
             ));
         }

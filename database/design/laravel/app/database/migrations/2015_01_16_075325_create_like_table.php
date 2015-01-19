@@ -16,6 +16,8 @@ class CreateLikeTable extends Migration {
         Schema::create('good', function($table) {
             $table->integer('user_id')->unsigned();
             $table->integer('answer_id')->unsigned();
+            $table->index('user_id');
+            $table->index('answer_id');
 
             $table->primary(array('user_id', 'answer_id'));
             $table->foreign('user_id')

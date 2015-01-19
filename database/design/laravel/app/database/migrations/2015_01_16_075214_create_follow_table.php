@@ -16,6 +16,8 @@ class CreateFollowTable extends Migration {
         Schema::create('follow', function($table) {
             $table->integer('user_id')->unsigned();
             $table->integer('follower')->unsigned();
+            $table->index('user_id');
+            $table->index('follower');
 
             $table->primary(array('user_id', 'follower'));
             $table->foreign('user_id')

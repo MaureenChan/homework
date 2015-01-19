@@ -9,8 +9,6 @@ class UserTableSeeder extends Seeder {
             $user = DB::table('user')->insert(array(
                 'name' => $faker->userName,
                 'password' => $faker->password,
-                'birthday' => $faker->dateTime()->format('Y-m-d H:i:s'),
-                'gender' => $faker->randomLetter,
             ));
         }
     }

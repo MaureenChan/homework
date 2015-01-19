@@ -35,8 +35,11 @@
             <p>
                 {{$comment->comment}} ----
                 <a href="{{route('user', $comment->commenter->user_id)}}">{{$comment->commenter->name}}</a> /
-                <span class="date">{{$comment->comment_date}}</span>
-            </p>
+                <span class="date">{{$comment->comment_date}}</span> 
+                @if (Auth::id() == $comment->commenter->user_id)
+                ----
+                <span><a href="{{route('remove_comment', $comment->id)}}">remove</a></span> </p>
+                @endif
         </div>
     @endforeach
 </div>

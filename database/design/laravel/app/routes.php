@@ -88,6 +88,11 @@ Route::group(array('before' => 'my_auth'), function() {
         'uses' => 'QuestionController@add_comment'
     ));
 
+    Route::get('/question/remove_comment/{comment_id}', array(
+        'as' => 'remove_comment',
+        'uses' => 'QuestionController@remove_comment'
+    ));
+
     // get comment
     Route::get('/question/comment', array(
         'as' => 'comment',

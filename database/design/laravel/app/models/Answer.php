@@ -9,5 +9,8 @@ class Answer extends Eloquent {
             ->orderBy('comment_date', 'desc');
     }
 
+    public function question() {
+        return $this->belongsTo('Question', 'answer_id', 'answer_id');
+    }
 
 }

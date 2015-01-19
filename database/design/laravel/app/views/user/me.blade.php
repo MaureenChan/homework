@@ -13,7 +13,7 @@
 <a href="{{route('followers')}}">followers({{count(Auth::user()->followers)}})</a> /
 <a href="{{route('followings')}}">followings({{count(Auth::user()->followings)}})</a>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-4">
             <h2>Questions to answer:</h2>
             <hr>
             @foreach ($questions_to_answer as $question)
@@ -32,7 +32,7 @@
                 {{Form::close()}}
             @endforeach
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <h2>Questions answered:</h2>
             <hr>
             @foreach ($questions_answered as $question)
@@ -47,7 +47,7 @@
                 </div>
             @endforeach
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <h2>Questions to be answered:</h2>
             <hr>
             @foreach ($questions_to_be_answered as $question)

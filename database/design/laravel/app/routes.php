@@ -132,6 +132,11 @@ Route::group(array('before' => 'my_auth'), function() {
         'uses' => 'UserController@answer'
     ));
 
+    Route::post('/update_answer', array(
+        'as' => 'update_answer',
+        'uses' => 'AnswerController@update_answer'
+    ));
+
 });
 
 Route::filter('my_auth', function () {

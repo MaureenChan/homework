@@ -29,8 +29,18 @@ class QuestionController extends BaseController {
         }
     }
 
-    public function remove_comment() {
+    public function remove_comment($comment_id) {
+        $comment = Comment::find($comment_id);
+        if ($comment) {
+            $answer_id = $comment->answer_id;
+            $answer = Answer::find($answer_id);
+            $question = $answer->question;
+            $question_id = $question->question_id;
+            $comment->delete();
+            return Redirect::route('question', $question_id);
+        }
 
+        
     }
 
     // get comment

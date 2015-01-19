@@ -60,7 +60,8 @@
                 <span class="date">{{$comment->comment_date}}</span> 
                 @if (Auth::id() == $comment->commenter->user_id)
                 ----
-                <span><a href="{{route('remove_comment', $comment->id)}}">remove</a></span> </p>
+    
+                <span><a href="{{route('remove_comment', $comment->id)}}" onclick="return confirm('are you sure to remove this comment?')" title="remove"><span class="glyphicon glyphicon-trash"></span></a></span></p>
                 @endif
         </div>
     @endforeach

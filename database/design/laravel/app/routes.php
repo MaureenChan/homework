@@ -70,11 +70,17 @@ Route::group(array('before' => 'my_auth'), function() {
         'uses' => 'UserController@unfollow'
     ));
 
+    Route::get('/user/my_good', array(
+        'as' => 'my_good', 
+        'uses' => 'UserController@my_good'
+    ));
+
     // add good
     Route::get('/user/good/{answer_id}', array(
         'as' => 'good',
         'uses' => 'UserController@add_good'
     ));
+
 
     // remove good
     Route::get('/user/ungood/{answer_id}', array(

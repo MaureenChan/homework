@@ -13,4 +13,12 @@ class Answer extends Eloquent {
         return $this->belongsTo('Question', 'answer_id', 'answer_id');
     }
 
+    public function good() {
+        return $this->hasMany('Good', 'answer_id', 'answer_id');
+    }
+
+
+    public function users() {
+        return $this->belongsToMay('User', 'Good');
+    }
 }

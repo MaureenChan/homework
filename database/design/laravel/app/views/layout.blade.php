@@ -10,8 +10,9 @@
     <nav class="navbar navbar-default">
         <a class="navbar-brand" href="{{{URL::to('/')}}}">Q&A</a>
         <a class="navbar-brand" href="{{{URL::to('/users/all')}}}">All_Users</a>
-        <ul class="nav nav-pills pull-right">
         @if (Auth::check())
+        <a class="navbar-brand" href="{{{URL::to('/user/my_good')}}}">Like</a>
+        <ul class="nav nav-pills pull-right">
         <li><a href="{{{route('me')}}}">{{Auth::user()->name}}</a></li>
         <li><a href="{{{route('logout')}}}">logout</a></li>
         @else

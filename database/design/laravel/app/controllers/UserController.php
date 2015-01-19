@@ -167,6 +167,26 @@ class UserController extends BaseController {
         return -1;
     }
 
+    public function my_good() {
+        $user = Auth::user();
+        $answers = $user->answers;
+        return View::make('like')
+            ->with('title', 'Like')
+            ->with('answer', $answers);
+
+        //foreach ($answers as $answer){
+            //var_dump($answer->id);
+        //}
+
+        //$questions = $answers->question;
+        ////$answers = Good::where('user_id', '=', Auth::id())->get();
+        //var_dump($questions);
+            
+        var_dump($answers);
+        //var_dump("--------");
+            
+    }
+
     public function get_login() {
         if (Auth::check()) {
             return Redirect::route('home');

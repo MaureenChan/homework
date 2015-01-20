@@ -16,7 +16,6 @@ class CreateQuestionTable extends Migration {
         Schema::create('question', function($table) {
             $table->increments('question_id');
             $table->string('question',1000)->nullable(false);
-            $table->string('question_detail', 1000)->nullable(true);
             $table->integer('ask_user_id')->unsigned();
             $table->integer('answer_id')->unsigned()->nullable(true);
             $table->integer('answer_user_id')->unsigned();

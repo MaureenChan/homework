@@ -7,7 +7,7 @@ class QuestionTableSeeder extends Seeder {
 
         for ($i = 0; $i < 100; $i++) {
             $question = DB::table('question')->insert(array(
-                'question' => $faker->sentence($nbWords = 100),
+                'question' => $faker->sentence($nbWords = 10),
                 'ask_user_id' => $faker->numberBetween($min = 1, $max = 100),
                 'answer_id' => $faker->numberBetween($min = 1, $max = 100),
                 'answer_user_id' => $faker->numberBetween($min = 1, $max = 100),

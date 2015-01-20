@@ -35,14 +35,17 @@ class UserController extends BaseController {
         $questions_to_answer = $me
             ->questions()
             ->whereNull('answer_id')
+            ->orderby('question_date', 'desc')
             ->get();
         $questions_answered = $me
             ->questions()
             ->whereNotNull('answer_id')
+            ->orderby('question_date', 'desc')
             ->get();
         $questions_to_be_answered = $me
             ->my_questions()
             ->whereNull('answer_id')
+            ->orderby('question_date', 'desc')
             ->get();
 
         return View::make('user/me')
@@ -63,6 +66,7 @@ class UserController extends BaseController {
             if ($question->question) {
                 $question->ask_user_id = Auth::id();
                 $question->answer_user_id = $user->user_id;
+                $question->question_date = new DateTime();
                 $question->save();
             } else {
                 var_dump("Question can't be empty");
@@ -92,6 +96,7 @@ class UserController extends BaseController {
             $question->answer_id = $answer->answer_id;
             var_dump($question->answer_id);
             $answer->answer = Input::get('answer');
+            $answer->answer_date = new DateTime();
             $question->save();
             $answer->save();
         }

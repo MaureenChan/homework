@@ -24,6 +24,7 @@ class QuestionController extends BaseController {
             $comment->user_id = Auth::id();
             $comment->answer_id = $answer_id;
             $comment->comment = Input::get('comment');
+            $comment->comment_date = new DateTime();
             $comment->save();
             return Redirect::route('question/', $question_id);
         }

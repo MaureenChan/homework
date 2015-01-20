@@ -137,6 +137,20 @@ Route::group(array('before' => 'my_auth'), function() {
         'uses' => 'AnswerController@update_answer'
     ));
 
+    Route::get('/question/{question_id}', array(
+        'as' => 'question',
+        'uses' => 'QuestionController@question'
+    ));
+
+    Route::get('/question/{question_id}', array(
+        'as' => 'question/',
+        'uses' => 'QuestionController@question'
+    ));
+    // get user by id
+    Route::get('/user/{user_id}', array(
+        'as' => 'user',
+        'uses' => 'UserController@get_by_id'
+    ));
 });
 
 Route::filter('my_auth', function () {
@@ -145,18 +159,4 @@ Route::filter('my_auth', function () {
     }
 });
 
-// get user by id
-Route::get('/user/{user_id}', array(
-    'as' => 'user',
-    'uses' => 'UserController@get_by_id'
-));
 
-Route::get('/question/{question_id}', array(
-    'as' => 'question',
-    'uses' => 'QuestionController@question'
-));
-
-Route::get('/question/{question_id}', array(
-    'as' => 'question/',
-    'uses' => 'QuestionController@question'
-));
